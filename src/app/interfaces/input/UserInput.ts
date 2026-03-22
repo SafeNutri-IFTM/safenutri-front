@@ -1,11 +1,21 @@
 export class UserInput {
-  name: string | undefined;
+  nome: string | undefined;
   email: string | undefined;
-  password: string | undefined;
+  senha: string | undefined;
+  dt_nascimento: string | undefined;
+  generoId: number | undefined;
+  roleId: number | undefined;
+  restricoesIds?: number[];
 
-  constructor(user: any) {
-    this.name = user.name;
-    this.email = user.email;
-    this.password = user.password;
+  constructor(data: any) {
+    this.nome = data.nome;
+    this.email = data.email;
+    this.senha = data.senha;
+    this.dt_nascimento = data.dt_nascimento;
+    this.generoId = data.generoId;
+    this.roleId = data.roleId;
+    
+    // Específico do Paciente
+    this.restricoesIds = data.restricoesIds;
   }
 }

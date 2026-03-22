@@ -1,11 +1,25 @@
 export class NutriInput {
-  name: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
+    nome: string | undefined;
+    email: string | undefined;
+    senha: string | undefined;
+    dt_nascimento: string | undefined;
+    generoId: number | undefined;
+    roleId: number | undefined;
+    crn: string | undefined;
+    descPerfil?: string;
+    caminhoFoto?: string;
 
-  constructor(user: any) {
-    this.name = user.name;
-    this.email = user.email;
-    this.password = user.password;
-  }
+    constructor(data: any) {
+        this.nome = data.nome;
+        this.email = data.email;
+        this.senha = data.senha;
+        this.dt_nascimento = data.dt_nascimento;
+        this.generoId = data.generoId;
+        this.roleId = data.roleId;
+
+        // Específico do Nutricionista
+        this.crn = data.crn;
+        this.descPerfil = data.descPerfil;
+        this.caminhoFoto = data.caminhoFoto;
+    }
 }
