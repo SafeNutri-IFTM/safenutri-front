@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { NutriInput } from '../../../interfaces/input/NutriInput';
+import { NutricionistaInput } from '../../../interfaces/input/NutricionistaInput';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +10,9 @@ import { NutriInput } from '../../../interfaces/input/NutriInput';
 export class UserService {
   private UrlNutri = `${environment.api}/nutri`;
 
-  constructor(private http: HttpClient) {}
-  
-  create(NutriInput: NutriInput): Observable<any> {
+  constructor(private http: HttpClient) { }
+
+  create(NutriInput: NutricionistaInput): Observable<any> {
     return this.http.post<any>(this.UrlNutri, NutriInput);
   }
 }

@@ -1,9 +1,14 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router'; 
+import { RouterModule, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
+import { UserService } from '../services/user.service';
+import { UserInput } from '../../../interfaces/input/UserInput';
+import { NotifierService } from '../../../services/notifier.service';
 
 @Component({
     selector: 'app-cadastro-usuario',
@@ -22,28 +27,24 @@ import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-lo
         input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none !important; }
     `]
 })
-export class CadastroUserComponent {
+export class CadastroUserComponent implements OnInit {
     userForm: FormGroup;
     hidePassword = true;
 
     dropdownRestricao = false;
     dropdownGenero = false;
 
-    opcoesRestricao = [
-        { label: 'Intolerância à Lactose', value: 'INTOLERANCIA_LACTOSE' },
-        { label: 'Doença Celíaca (Sem Glúten)', value: 'CELIACO' },
-        { label: 'Alergia a Amendoim', value: 'AMENDOIM' }
-    ];
-
-    opcoesGenero = [
-        { label: 'Masculino', value: 'MASCULINO' },
-        { label: 'Feminino', value: 'FEMININO' },
-        { label: 'Outro', value: 'OUTRO' }
-    ];
+    opcoesRestricao: any[] = [];
+    opcoesGenero: any[] = [];
 
     @ViewChild('datePicker') datePicker!: ElementRef;
 
-    constructor(private fb: FormBuilder, private router: Router) {
+    constructor(
+        private fb: FormBuilder,
+        private router: Router,
+        private userService: UserService,
+        private notifier: NotifierService,
+    ) {
         this.userForm = this.fb.group({
             nome: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
@@ -51,6 +52,22 @@ export class CadastroUserComponent {
             dataNascimento: ['', Validators.required],
             restricaoAlimentar: ['', Validators.required],
             genero: ['', Validators.required]
+        });
+    }
+
+    ngOnInit(): void {
+        // forkJoin serve para disparar as requisições ao mesmo tempo
+        forkJoin({
+            generos: this.userService.getGeneros(),
+            restricoes: this.userService.getRestricao()
+        }).subscribe({
+            next: (retorno) => {
+                this.opcoesGenero = retorno.generos.map(g => ({ label: g.nome, value: g.id }));
+                this.opcoesRestricao = retorno.restricoes.map(r => ({ label: r.nome, value: r.id }));
+            },
+            error: (err) => {
+                console.error('Erro ao carregar dados de domínio', err);
+            }
         });
     }
 
@@ -64,7 +81,6 @@ export class CadastroUserComponent {
         return this.opcoesGenero.find(op => op.value === val)?.label || 'Gênero';
     }
 
-    // Passamos o Evento para evitar que o clique se espalhe
     toggleDropdown(tipo: string, event: Event): void {
         event.stopPropagation();
         if (tipo === 'restricao') {
@@ -81,7 +97,7 @@ export class CadastroUserComponent {
         this.dropdownGenero = false;
     }
 
-    selecionarOpcao(campo: string, valor: string, event: Event): void {
+    selecionarOpcao(campo: string, valor: string | number, event: Event): void {
         event.stopPropagation();
         this.userForm.get(campo)?.setValue(valor);
         this.fecharDropdowns();
@@ -92,12 +108,36 @@ export class CadastroUserComponent {
     }
 
     irParaNutricionista(): void {
-        this.router.navigate(['/nutri/register']); 
+        this.router.navigate(['/nutri/register']);
     }
 
-    onSubmit(): void {
+    save(): void {
         if (this.userForm.valid) {
-            console.log('Payload Cadastro Cliente:', this.userForm.value);
+            const formValues = this.userForm.value;
+
+            const payload = new UserInput({
+                nome: formValues.nome,
+                email: formValues.email,
+                senha: formValues.senha,
+                dtNascimento: formValues.dataNascimento,
+                genero: formValues.genero,
+                restricoes: [formValues.restricaoAlimentar]
+            });
+
+            console.log('Enviando para o backend:', payload);
+
+            this.userService.create(payload).subscribe({
+                next: (resposta) => {
+                    console.log('Usuário cadastrado com sucesso!', resposta);
+
+                    // this.router.navigate(['/login']);
+                },
+                error: (erro) => {
+                    console.error('Erro ao cadastrar usuário', erro);
+                    this.notifier.showError("Erro ao cadastrar usuário.");
+                }
+            });
+
         } else {
             this.userForm.markAllAsTouched();
         }
