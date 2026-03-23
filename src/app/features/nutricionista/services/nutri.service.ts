@@ -7,8 +7,8 @@ import { NutricionistaInput } from '../../../interfaces/input/NutricionistaInput
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
-  private UrlNutri = `${environment.api}/nutri`;
+export class NutricionistaService {
+  private UrlNutri = `${environment.api}/nutricionista`;
 
   constructor(private http: HttpClient) { }
 

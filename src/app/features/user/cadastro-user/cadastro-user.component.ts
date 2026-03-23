@@ -9,6 +9,7 @@ import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-lo
 import { UserService } from '../services/user.service';
 import { UserInput } from '../../../interfaces/input/UserInput';
 import { NotifierService } from '../../../services/notifier.service';
+import { roles } from '../../../const/roles';
 
 @Component({
     selector: 'app-cadastro-usuario',
@@ -48,7 +49,7 @@ export class CadastroUserComponent implements OnInit {
         this.userForm = this.fb.group({
             nome: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
-            senha: ['', [Validators.required, Validators.minLength(6)]],
+            senha: ['', [Validators.required]],
             dataNascimento: ['', Validators.required],
             restricaoAlimentar: ['', Validators.required],
             genero: ['', Validators.required]
@@ -56,14 +57,20 @@ export class CadastroUserComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // forkJoin serve para disparar as requisições ao mesmo tempo
         forkJoin({
             generos: this.userService.getGeneros(),
             restricoes: this.userService.getRestricao()
         }).subscribe({
-            next: (retorno) => {
-                this.opcoesGenero = retorno.generos.map(g => ({ label: g.nome, value: g.id }));
-                this.opcoesRestricao = retorno.restricoes.map(r => ({ label: r.nome, value: r.id }));
+            next: (retorno: any) => {
+                this.opcoesGenero = retorno.generos.map((g: any) => ({
+                    label: g.genero, 
+                    value: g.id
+                }));
+
+                this.opcoesRestricao = retorno.restricoes.map((r: any) => ({
+                    label: r.restricao,
+                    value: r.id
+                }));
             },
             error: (err) => {
                 console.error('Erro ao carregar dados de domínio', err);
@@ -121,7 +128,8 @@ export class CadastroUserComponent implements OnInit {
                 senha: formValues.senha,
                 dtNascimento: formValues.dataNascimento,
                 genero: formValues.genero,
-                restricoes: [formValues.restricaoAlimentar]
+                restricoes: [formValues.restricaoAlimentar],
+                role: roles.ID_USER
             });
 
             console.log('Enviando para o backend:', payload);
@@ -129,6 +137,7 @@ export class CadastroUserComponent implements OnInit {
             this.userService.create(payload).subscribe({
                 next: (resposta) => {
                     console.log('Usuário cadastrado com sucesso!', resposta);
+                    this.notifier.showSuccess("Usuário Cadadastrado com sucesso.")
 
                     // this.router.navigate(['/login']);
                 },
