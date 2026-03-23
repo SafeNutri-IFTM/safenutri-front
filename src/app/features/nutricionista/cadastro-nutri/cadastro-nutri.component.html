@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-col font-['Inter'] bg-white relative">
+<div class="min-h-screen flex flex-col font-['Arial'] bg-white relative">
   <app-navbar-login></app-navbar-login>
 
   <div *ngIf="dropdownCrn || dropdownGenero" class="fixed inset-0 z-30" (click)="fecharDropdowns()"></div>
@@ -152,7 +152,7 @@
 
           <div class="pt-6 flex flex-col items-center relative z-0">
             <button type="submit" [disabled]="nutriForm.invalid"
-              class="cursor-pointer w-[80%] bg-[#FFC605] text-black font-semibold py-3 rounded-4xl shadow-[0_4px_10px_rgba(255,198,5,0.3)] hover:bg-[#e6b305] transition-colors disabled:opacity-50 text-[15px]">Criar
+              class="cursor-pointer w-[80%] bg-[#FFC605] text-black font-semibold py-3 rounded-4xl hover:bg-[#e6b305] transition-colors text-[15px]">Criar
               conta</button>
             <p class="mt-6 text-[15px] font-normal text-black">Já possui uma conta? <a routerLink="/login"
                 class="text-[#FFC605] hover:underline cursor-pointer font-medium">Faça login</a></p>
