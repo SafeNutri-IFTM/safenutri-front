@@ -11,6 +11,11 @@ import { UserService } from '../../user/services/user.service';
 import { NutricionistaInput } from '../../../interfaces/input/NutricionistaInput';
 import { NotifierService } from '../../../services/notifier.service';
 
+import { finalize } from 'rxjs/operators';
+
+import { LoadingService } from '../../../services/loading.service';
+import { SpinnerComponent } from "../../../components/spinner/spinner.component";
+
 @Component({
     selector: 'app-cadastro-nutricionista',
     standalone: true,
@@ -20,7 +25,8 @@ import { NotifierService } from '../../../services/notifier.service';
         FormsModule,
         RouterModule,
         NavbarLoginComponent,
-        FooterComponent
+        FooterComponent,
+        SpinnerComponent
     ],
     templateUrl: './cadastro-nutri.component.html',
     styles: [`
@@ -49,19 +55,20 @@ export class CadastroNutriComponent implements OnInit {
         { label: 'CRN-11 (CE, MA, PI)', value: 'CRN11' },
     ];
 
-    opcoesGenero: any[] = []; // Agora inicia vazio para ser preenchido pela API
+    opcoesGenero: any[] = [];
 
     constructor(
         private fb: FormBuilder,
         private router: Router,
         private nutricionistaService: NutricionistaService,
-        private userService: UserService, // Injetado para buscar os gêneros
-        private notifier: NotifierService
+        private userService: UserService,
+        private notifier: NotifierService,
+        private loadingService: LoadingService,
     ) {
         this.nutriForm = this.fb.group({
             nome: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
-            senha: ['', [Validators.required]],
+            senha: ['', [Validators.required, Validators.minLength(5)]],
             dataNascimento: ['', Validators.required],
             crnEstado: ['', Validators.required],
             crnNumero: ['', Validators.required],
@@ -69,12 +76,16 @@ export class CadastroNutriComponent implements OnInit {
         });
     }
 
+    isInvalid(campo: string): boolean {
+        const control = this.nutriForm.get(campo);
+        return control ? control.invalid && (control.touched || control.dirty) : false;
+    }
+
     ngOnInit(): void {
-        // Busca os gêneros da API para pegar o ID correto (Ex: 1) ao invés da string
         this.userService.getGeneros().subscribe({
             next: (generos: any) => {
                 this.opcoesGenero = generos.map((g: any) => ({
-                    label: g.genero, 
+                    label: g.genero,
                     value: g.id
                 }));
             },
@@ -108,10 +119,10 @@ export class CadastroNutriComponent implements OnInit {
         this.dropdownGenero = false;
     }
 
-    // Adicionado "| number" para aceitar o ID numérico do gênero
     selecionarOpcao(campo: string, valor: string | number, event: Event): void {
         event.stopPropagation();
         this.nutriForm.get(campo)?.setValue(valor);
+        this.nutriForm.get(campo)?.markAsTouched();
         this.fecharDropdowns();
     }
 
@@ -140,16 +151,27 @@ export class CadastroNutriComponent implements OnInit {
                 inscricao: formValues.crnNumero
             });
 
-            this.nutricionistaService.create(payload).subscribe({
-                next: () => {
-                    this.notifier.showSuccess("Nutricionista cadastrado com sucesso!");
-                    this.router.navigate(['/login']);
-                },
-                error: (erro) => {
-                    console.error('Erro ao cadastrar nutricionista', erro);
-                    this.notifier.showError("Erro ao cadastrar: Verifique os dados ou o CRN.");
-                }
-            });
+            this.loadingService.show();
+
+            this.nutricionistaService.create(payload)
+                .pipe(
+                    finalize(() => {
+                        this.loadingService.hide();
+                    })
+                )
+                .subscribe({
+                    next: () => {
+                        this.notifier.showSuccess("Nutricionista cadastrado com sucesso!");
+                        this.router.navigate(['/login']);
+                    },
+                    error: (erro) => {
+                        console.error('Erro ao cadastrar nutricionista', erro);
+
+                        const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar: Verifique os dados ou o CRN.";
+
+                        this.notifier.showError(mensagemBackend);
+                    }
+                });
 
         } else {
             this.nutriForm.markAllAsTouched();

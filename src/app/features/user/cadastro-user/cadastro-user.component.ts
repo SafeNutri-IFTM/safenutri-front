@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 import { UserService } from '../services/user.service';
 import { UserInput } from '../../../interfaces/input/UserInput';
 import { NotifierService } from '../../../services/notifier.service';
+import { LoadingService } from '../../../services/loading.service';
 import { roles } from '../../../const/roles';
 
 @Component({
@@ -20,7 +23,8 @@ import { roles } from '../../../const/roles';
         FormsModule,
         RouterModule,
         NavbarLoginComponent,
-        FooterComponent
+        FooterComponent,
+        SpinnerComponent
     ],
     templateUrl: './cadastro-user.component.html',
     styles: [`
@@ -45,13 +49,14 @@ export class CadastroUserComponent implements OnInit {
         private router: Router,
         private userService: UserService,
         private notifier: NotifierService,
+        private loadingService: LoadingService
     ) {
         this.userForm = this.fb.group({
             nome: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
-            senha: ['', [Validators.required]],
+            senha: ['', [Validators.required, Validators.minLength(5)]],
             dataNascimento: ['', Validators.required],
-            restricaoAlimentar: ['', Validators.required],
+            restricaoAlimentar: [[], Validators.required], // Inicia como Array Vazio
             genero: ['', Validators.required]
         });
     }
@@ -63,7 +68,7 @@ export class CadastroUserComponent implements OnInit {
         }).subscribe({
             next: (retorno: any) => {
                 this.opcoesGenero = retorno.generos.map((g: any) => ({
-                    label: g.genero, 
+                    label: g.genero,
                     value: g.id
                 }));
 
@@ -78,9 +83,20 @@ export class CadastroUserComponent implements OnInit {
         });
     }
 
+    isInvalid(campo: string): boolean {
+        const control = this.userForm.get(campo);
+        return control ? control.invalid && (control.touched || control.dirty) : false;
+    }
+
+    // Atualizado para lidar com Array e juntar as opções com vírgula
     get labelRestricao() {
-        const val = this.userForm.get('restricaoAlimentar')?.value;
-        return this.opcoesRestricao.find(op => op.value === val)?.label || 'Restrição alimentar';
+        const val = this.userForm.get('restricaoAlimentar')?.value || [];
+        if (val.length === 0) return 'Restrições alimentares';
+
+        return this.opcoesRestricao
+            .filter(op => val.includes(op.value))
+            .map(op => op.label)
+            .join(', ');
     }
 
     get labelGenero() {
@@ -104,10 +120,31 @@ export class CadastroUserComponent implements OnInit {
         this.dropdownGenero = false;
     }
 
+    // Lógica atualizada para lidar com Multi-Select na restrição alimentar
     selecionarOpcao(campo: string, valor: string | number, event: Event): void {
         event.stopPropagation();
-        this.userForm.get(campo)?.setValue(valor);
-        this.fecharDropdowns();
+
+        const controle = this.userForm.get(campo);
+
+        if (campo === 'restricaoAlimentar') {
+            const valoresAtuais = controle?.value || [];
+            const index = valoresAtuais.indexOf(valor);
+
+            if (index > -1) {
+                valoresAtuais.splice(index, 1); // Remove se já estiver selecionado
+            } else {
+                valoresAtuais.push(valor); // Adiciona se não estiver
+            }
+
+            controle?.setValue([...valoresAtuais]);
+            controle?.markAsTouched();
+            // Não fechamos o dropdown aqui para o usuário poder clicar em mais opções!
+        } else {
+            // Lógica padrão para os outros campos (ex: Gênero)
+            controle?.setValue(valor);
+            controle?.markAsTouched();
+            this.fecharDropdowns();
+        }
     }
 
     togglePasswordVisibility(): void {
@@ -128,24 +165,27 @@ export class CadastroUserComponent implements OnInit {
                 senha: formValues.senha,
                 dtNascimento: formValues.dataNascimento,
                 genero: formValues.genero,
-                restricoes: [formValues.restricaoAlimentar],
+                restricoes: formValues.restricaoAlimentar,
                 role: roles.ID_USER
             });
 
-            console.log('Enviando para o backend:', payload);
+            this.loadingService.show();
 
-            this.userService.create(payload).subscribe({
-                next: (resposta) => {
-                    console.log('Usuário cadastrado com sucesso!', resposta);
-                    this.notifier.showSuccess("Usuário Cadadastrado com sucesso.")
+            this.userService.create(payload)
+                .pipe(finalize(() => this.loadingService.hide()))
+                .subscribe({
+                    next: (resposta) => {
+                        this.notifier.showSuccess("Usuário cadastrado com sucesso!");
+                        this.router.navigate(['/login']);
+                    },
+                    error: (erro) => {
+                        console.error('Erro ao cadastrar usuário', erro);
 
-                    // this.router.navigate(['/login']);
-                },
-                error: (erro) => {
-                    console.error('Erro ao cadastrar usuário', erro);
-                    this.notifier.showError("Erro ao cadastrar usuário.");
-                }
-            });
+                        const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar usuário. Verifique os dados.";
+
+                        this.notifier.showError(mensagemBackend);
+                    }
+                });
 
         } else {
             this.userForm.markAllAsTouched();
