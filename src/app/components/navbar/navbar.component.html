@@ -1,0 +1,41 @@
+<div class="bg-amber-400 border-b border-amber-500/10 shadow-xl shadow-black/20 px-6 py-3">
+    <div class="flex items-center justify-between h-20">
+
+        <a routerLink="/home/home" routerLinkActive="active">
+            <img src="../assets/LogoSafeNutri.png" alt="Logo SafeNutri" class="">
+        </a>
+
+        <div class="flex-1 max-w-2xl mx-8">
+            <div class="flex items-center bg-white rounded-full px-4 py-2.5 shadow-sm">
+                <input type="text" placeholder="Buscar Receitas"
+                    class="flex-1 bg-transparent border-none outline-none px-3 text-sm text-gray-800 placeholder-gray-500 font-medium">
+
+                <button class="text-gray-800 hover:text-gray-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 text-gray-800">
+            <img src="./assets/Avatar.png" alt="Avatar do Usuário">
+            <div class="text-base leading-tight">
+                <span>Olá, </span>
+                <a routerLink="/#/#" routerLinkActive="active"
+                    class="font-bold underline underline-offset-2 hover:text-gray-600 transition-colors">
+                    Entre
+                </a>
+                <span> ou</span>
+                <br>
+                <a routerLink="/user/register" routerLinkActive="active"
+                    class="font-bold underline underline-offset-2 hover:text-gray-600 transition-colors">
+                    Cadastre-se
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>

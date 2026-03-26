@@ -1,0 +1,8 @@
+export const roles = {
+    ID_ADMIN: 1,
+    ROLE_ADMIN: 'ADMIN',
+    ID_NUTRICIONISTA: 2,
+    ROLE_NUTRICIONISTA: 'NUTRICIONISTA',
+    ID_USER: 3,
+    ROLE_USER: 'USER',
+}
