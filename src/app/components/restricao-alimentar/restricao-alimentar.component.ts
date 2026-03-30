@@ -1,8 +1,10 @@
-import { Component, Input, ElementRef, HostListener, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ElementRef, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+
+import { UserService } from '../../features/user/services/user.service'; 
 
 @Component({
     selector: 'app-restricao-alimentar',
@@ -17,21 +19,36 @@ import { RouterModule } from '@angular/router';
     templateUrl: './restricao-alimentar.component.html',
     styleUrl: './restricao-alimentar.component.css'
 })
-export class RestricaoAlimentarComponent implements OnChanges {
+export class RestricaoAlimentarComponent implements OnInit {
     @Input() control!: AbstractControl | null;
-    @Input() opcoes: any[] = [];
 
+    opcoes: any[] = [];
     dropdownAberto = false;
     termoBusca: string = '';
     opcoesFiltradas: any[] = [];
 
-    constructor(private eRef: ElementRef) { }
+    constructor(
+        private eRef: ElementRef,
+        private userService: UserService
+    ) { }
 
-    // quando receber as opções da API, alimenta a lista filtrada
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['opcoes']) {
-            this.opcoesFiltradas = [...this.opcoes];
-        }
+    ngOnInit(): void {
+        this.buscarOpcoes();
+    }
+
+    buscarOpcoes(): void {
+        this.userService.getRestricao().subscribe({
+            next: (restricoes: any) => {
+                this.opcoes = restricoes.map((r: any) => ({
+                    label: r.restricao,
+                    value: r.id
+                }));
+                this.opcoesFiltradas = [...this.opcoes];
+            },
+            error: (err) => {
+                console.error('Erro ao carregar restrições', err);
+            }
+        });
     }
 
     @HostListener('document:click', ['$event'])
@@ -62,7 +79,6 @@ export class RestricaoAlimentarComponent implements OnChanges {
 
         this.dropdownAberto = true;
 
-        // Se o campo estiver vazio, mostra todas as opções
         if (!this.termoBusca || this.termoBusca.trim() === '') {
             this.opcoesFiltradas = [...this.opcoes];
             return;

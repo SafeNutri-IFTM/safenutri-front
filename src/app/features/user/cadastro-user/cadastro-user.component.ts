@@ -2,7 +2,6 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { FooterComponent } from '../../../components/footer/footer.component';
@@ -39,8 +38,6 @@ export class CadastroUserComponent implements OnInit {
     hidePassword = true;
 
     dropdownGenero = false;
-
-    opcoesRestricao: any[] = [];
     opcoesGenero: any[] = [];
 
     @ViewChild('datePicker') datePicker!: ElementRef;
@@ -63,23 +60,15 @@ export class CadastroUserComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        forkJoin({
-            generos: this.userService.getGeneros(),
-            restricoes: this.userService.getRestricao()
-        }).subscribe({
-            next: (retorno: any) => {
-                this.opcoesGenero = retorno.generos.map((g: any) => ({
+        this.userService.getGeneros().subscribe({
+            next: (generos: any) => {
+                this.opcoesGenero = generos.map((g: any) => ({
                     label: g.genero,
                     value: g.id
                 }));
-
-                this.opcoesRestricao = retorno.restricoes.map((r: any) => ({
-                    label: r.restricao,
-                    value: r.id
-                }));
             },
             error: (err) => {
-                console.error('Erro ao carregar dados de domínio', err);
+                console.error('Erro ao carregar gêneros', err);
             }
         });
     }
