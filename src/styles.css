@@ -1,9 +1,8 @@
-@tailwind base;
-@tailwind components;
+@import "tailwindcss/preflight";
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Arial';
   background-color: #f9fafb;
 }
 /* You can add global styles to this file, and also import other style files */
