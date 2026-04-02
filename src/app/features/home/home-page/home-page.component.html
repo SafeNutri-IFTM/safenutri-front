@@ -1,8 +1,64 @@
 <div class="min-h-screen flex flex-col bg-white">
     <app-navbar></app-navbar>
 
-    <div class="flex-1 container mx-auto flex items-center justify-center pb-6">
-        <img class="h-100 max-w-full" src="./assets/construcao.png">
+    <div class="flex-1 container mx-auto px-6 pt-8 pb-12 grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-12 items-start">
+
+        <div class="md:col-span-2 w-full flex flex-col items-start justify-self-start text-left pr-0 md:pr-8 lg:pr-12 mt-4 md:mt-8">
+            <h1 class="text-3xl md:text-4xl lg:text-[40px] font-bold leading-tight text-gray-900 w-full m-0">
+                Receitas Seguras e Deliciosas para a Sua Saúde!
+            </h1>
+            <p class="mt-4 mb-8 text-lg md:text-xl text-gray-700 max-w-2xl w-full text-left leading-relaxed">
+                Esqueça a dificuldade de encontrar pratos seguros para você ou sua família. Filtramos opções deliciosas
+                com base nas suas restrições alimentares, alergias e preferências diárias. Mais do que sabor, entregamos
+                tranquilidade para a sua rotina: absolutamente todas as recomendações e receitas do nosso sistema são
+                rigorosamente validadas por nutricionistas credenciados.
+            </p>
+            <div class="self-start">
+                <app-button-primary value="Criar Perfil Gratuitamente"></app-button-primary>
+            </div>
+        </div>
+
+        <div class="md:col-span-1 w-full flex justify-end">
+            <img class="max-w-full h-auto object-contain object-right" src="./assets/imagemPaginaInicial.png"
+                alt="Imagem Inicial">
+        </div>
+
+        <div class="caixa md:col-span-1 h-full self-start w-full">
+            <div class="flex items-center gap-4 w-full">
+                <div class="bg-yellow-500 w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+                    <img src="./assets/icon/Filter.svg" class="h-6" alt="Filtro">
+                </div>
+                <p class="font-semibold text-[18px]">Filtrar Receitas</p>
+            </div>
+            <p class="text-gray-600 text-lg mt-3 text-left leading-relaxed">
+                Diga adeus às buscas demoradas. Encontramos o que é seguro para você.
+            </p>
+        </div>
+
+        <div class="caixa md:col-span-1 h-full self-start w-full">
+            <div class="flex items-center gap-4 w-full">
+                <div class="bg-yellow-500 w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+                    <img src="./assets/icon/Approved.svg" class="h-6" alt="Aprovado">
+                </div>
+                <p class="font-semibold text-[18px]">Nutricionistas Validados</p>
+            </div>
+            <p class="text-gray-600 text-lg mt-3 text-left leading-relaxed">
+                Receitas verificadas e aprovadas por especialistas credenciados (CRN).
+            </p>
+        </div>
+
+        <div class="caixa md:col-span-1 h-full self-start w-full">
+            <div class="flex items-center gap-4 w-full">
+                <div class="bg-yellow-500 w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+                    <img src="./assets/icon/Favorite.svg" class="h-6" alt="Favorito">
+                </div>
+                <p class="font-semibold text-[18px]">Recomendações Personalizadas</p>
+            </div>
+            <p class="text-gray-600 text-lg mt-3 text-left leading-relaxed">
+                De acordo com sua restrição alimentar cadastrada, o sistema sugere novos pratos para você amar.
+            </p>
+        </div>
+
     </div>
 
     <app-footer></app-footer>
