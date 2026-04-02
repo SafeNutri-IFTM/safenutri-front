@@ -14,6 +14,8 @@ import { LoadingService } from '../../../services/loading.service';
 import { roles } from '../../../const/roles';
 import { RestricaoAlimentarComponent } from '../../../components/restricao-alimentar/restricao-alimentar.component';
 
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
+
 @Component({
     selector: 'app-cadastro-usuario',
     standalone: true,
@@ -26,6 +28,7 @@ import { RestricaoAlimentarComponent } from '../../../components/restricao-alime
         FooterComponent,
         SpinnerComponent,
         RestricaoAlimentarComponent,
+        ButtonPrimaryComponent 
     ],
     templateUrl: './cadastro-user.component.html',
     styles: [`
