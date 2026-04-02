@@ -16,6 +16,8 @@ import { finalize } from 'rxjs/operators';
 import { LoadingService } from '../../../services/loading.service';
 import { SpinnerComponent } from "../../../components/spinner/spinner.component";
 
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
+
 @Component({
     selector: 'app-cadastro-nutricionista',
     standalone: true,
@@ -26,7 +28,8 @@ import { SpinnerComponent } from "../../../components/spinner/spinner.component"
         RouterModule,
         NavbarLoginComponent,
         FooterComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        ButtonPrimaryComponent 
     ],
     templateUrl: './cadastro-nutri.component.html',
     styles: [`
