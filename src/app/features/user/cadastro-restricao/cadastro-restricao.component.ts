@@ -1,0 +1,76 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+
+import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
+import { FooterComponent } from '../../../components/footer/footer.component';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { UserService } from '../services/user.service';
+import { NotifierService } from '../../../services/notifier.service';
+import { LoadingService } from '../../../services/loading.service';
+
+@Component({
+    selector: 'app-cadastro-restricao',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        NavbarLoginComponent,
+        FooterComponent,
+        SpinnerComponent
+    ],
+    templateUrl: './cadastro-restricao.component.html'
+})
+export class CadastroRestricaoComponent implements OnInit {
+    restricaoForm: FormGroup;
+
+    constructor(
+        private fb: FormBuilder,
+        private userService: UserService,
+        private notifier: NotifierService,
+        private loadingService: LoadingService,
+        private router: Router
+    ) {
+        this.restricaoForm = this.fb.group({
+            restricao: ['', [Validators.required, Validators.minLength(3)]],
+            descricao: ['']
+        });
+    }
+
+    ngOnInit(): void { }
+
+    isInvalid(campo: string): boolean {
+        const control = this.restricaoForm.get(campo);
+        return control ? control.invalid && (control.touched || control.dirty) : false;
+    }
+
+    save(): void {
+        if (this.restricaoForm.valid) {
+            this.loadingService.show();
+
+            // O payload segue o modelo da entidade RestricaoAlimentar do seu Back-End
+            const payload = {
+                restricao: this.restricaoForm.value.restricao,
+                descricao: this.restricaoForm.value.descricao
+            };
+
+            this.userService.createRestricao(payload)
+                .pipe(finalize(() => this.loadingService.hide()))
+                .subscribe({
+                    next: () => {
+                        this.notifier.showSuccess("Restrição cadastrada com sucesso!");
+                        this.restricaoForm.reset();
+                    },
+                    error: (erro) => {
+                        const msg = erro?.error?.message || "Erro ao cadastrar restrição.";
+                        this.notifier.showError(msg);
+                    }
+                });
+        } else {
+            this.restricaoForm.markAllAsTouched();
+        }
+    }
+}
