@@ -1,7 +1,7 @@
 <div class="w-full">
-    <div class="flex items-center gap-3 mt-2 relative z-50">
+    <div class="flex items-center gap-3 mt-2 relative" [ngClass]="dropdownAberto ? 'z-50' : 'z-10'">
 
-        <div class="relative grow bg-[#FAFAFA] border-b-2 transition-colors rounded-t-lg"
+        <div class="relative grow bg-[#FAFAFA] border-b-2 transition-colors rounded-t-lg focus-within:border-[#FFC605]"
             [ngClass]="isInvalid() ? 'border-red-500' : (dropdownAberto ? 'border-[#FFC605]' : 'border-black')">
 
             <input type="text" [(ngModel)]="termoBusca" [placeholder]="labelRestricao" (keyup.enter)="buscar()"
