@@ -64,7 +64,7 @@ export class CadastroRestricaoComponent implements OnInit {
                         this.notifier.showSuccess("Restrição cadastrada com sucesso!");
                         this.restricaoForm.reset();
                     },
-                    error: (erro) => {
+                    error: (erro: any) => {
                         const msg = erro?.error?.message || "Erro ao cadastrar restrição.";
                         this.notifier.showError(msg);
                     }

@@ -25,4 +25,8 @@ export class UserService {
   getRestricao(): Observable<any[]> {
     return this.http.get<any[]>(this.urlRestricao);
   }
+
+  createRestricao(payload: any): Observable<any> {
+    return this.http.post<any>(this.urlRestricao, payload);
+  }
 }
