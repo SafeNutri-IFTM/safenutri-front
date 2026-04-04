@@ -22,7 +22,7 @@
         <div class="col-span-2 flex flex-col gap-6">
           <div>
             <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Título da Receita</h3>
-            <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t-lg"
+            <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t-lg"
                  [ngClass]="isInvalid('titulo') ? 'border-red-500' : 'border-black'">
               <input type="text" formControlName="titulo" id="titulo_receita" placeholder=" " class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
               <label for="titulo_receita" class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">Título</label>
@@ -32,7 +32,7 @@
 
           <div class="flex flex-col flex-grow">
             <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Descrição da Receita</h3>
-            <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t-lg flex-grow flex"
+            <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t-lg flex-grow flex"
                  [ngClass]="isInvalid('descricao') ? 'border-red-500' : 'border-black'">
               <textarea formControlName="descricao" placeholder="Descrição..." class="w-full bg-transparent border-none pt-3 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none resize-none flex-grow"></textarea>
             </div>
@@ -55,7 +55,7 @@
               <div class="flex items-start gap-2">
                 
                 <div class="flex flex-col flex-grow">
-                  <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t"
+                  <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t"
                        [ngClass]="isFieldInvalidInArray('ingredientes', i, 'nome') ? 'border-red-500' : 'border-black'">
                     <input type="text" formControlName="nome" placeholder="Obs: Colocar nome do ingrediente" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
                   </div>
@@ -63,7 +63,7 @@
                 </div>
                 
                 <div class="flex flex-col w-[85px]">
-                  <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t"
+                  <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t"
                        [ngClass]="isFieldInvalidInArray('ingredientes', i, 'unidade') ? 'border-red-500' : 'border-black'">
                     <input type="text" formControlName="unidade" placeholder="Unidade" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] text-center font-normal outline-none">
                   </div>
@@ -71,7 +71,7 @@
                 </div>
                 
                 <div class="flex flex-col w-[70px]">
-                  <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t"
+                  <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t"
                        [ngClass]="isFieldInvalidInArray('ingredientes', i, 'quantidade') ? 'border-red-500' : 'border-black'">
                     <input type="number" formControlName="quantidade" placeholder="Qntd" class="w-full bg-transparent border-none py-3 px-2 focus:ring-0 text-gray-700 text-[13px] text-center font-normal outline-none">
                   </div>
@@ -104,7 +104,7 @@
               </div>
               
               <div class="flex flex-col mb-4 w-full lg:w-[58%]">
-                <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t w-full"
+                <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t w-full"
                      [ngClass]="isFieldInvalidInArray('passos', i, 'tituloEtapa') ? 'border-red-500' : 'border-black'">
                   <input type="text" formControlName="tituloEtapa" placeholder="Titulo da Etapa" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
                 </div>
@@ -112,7 +112,7 @@
               </div>
               
               <div class="flex flex-col w-full">
-                <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t w-full"
+                <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t w-full"
                      [ngClass]="isFieldInvalidInArray('passos', i, 'descricaoEtapa') ? 'border-red-500' : 'border-black'">
                   <textarea formControlName="descricaoEtapa" placeholder="Obs: Use frases curtas, numeradas (1., 2., 3...) e com detalhes de tempo e temperatura." class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none h-[140px] resize-none leading-relaxed"></textarea>
                 </div>
@@ -133,7 +133,7 @@
 
         <div>
           <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Total de Calorias da Receita (kcal)</h3>
-          <div class="relative bg-[#F8F9FA] border-b-[1px] focus-within:border-[#FFC605] transition-colors rounded-t"
+          <div class="relative bg-[#F8F9FA] border-b-2 focus-within:border-[#FFC605] transition-colors rounded-t"
                [ngClass]="isInvalid('calorias') ? 'border-red-500' : 'border-black'">
             <input type="number" formControlName="calorias" placeholder="Obs: colocar quantidade aproximada" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
           </div>
