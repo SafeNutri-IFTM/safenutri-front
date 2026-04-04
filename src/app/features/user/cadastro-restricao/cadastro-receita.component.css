@@ -1,0 +1,19 @@
+:host {
+    display: block;
+}
+
+/* Remove setas de input number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Suavização de bordas para os containers */
+.container {
+    max-width: 1100px;
+}
