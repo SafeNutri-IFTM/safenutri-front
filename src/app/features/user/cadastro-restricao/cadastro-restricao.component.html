@@ -5,12 +5,10 @@
         <div
             class="bg-white rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.08)] border border-gray-100 w-full max-w-6xl p-10 md:p-16">
 
-            <h1 class="text-4xl md:text-5xl font-bold text-[#4A4A68] text-center mb-16">
-                Cadastro de Restrição alimentar
+            <h1 class="text-4xl md:text-5xl font-bold text-[#4A4A68] text-center mb-16">Cadastro de Restrição alimentar
             </h1>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-
                 <div class="flex flex-col gap-8 text-left">
                     <p class="text-black text-xl leading-relaxed font-medium">
                         Caso você não tenha encontrado sua restrição alimentar, poderá solicitar seu cadastro no
@@ -28,31 +26,36 @@
                     <form [formGroup]="restricaoForm" (ngSubmit)="save()" class="space-y-10">
 
                         <div class="flex flex-col gap-3 text-left">
-                            <label class="text-black font-bold text-lg uppercase">Nome da restrição alimentar</label>
-                            <div
-                                class="relative bg-gray-50 border-b-2 border-black focus-within:border-[#FFC605] rounded-t-lg transition-colors">
-                                <input type="text" formControlName="restricao" placeholder="Ex: Sem Glúten"
-                                    class="w-full bg-transparent border-none py-4 px-4 focus:ring-0 text-black focus:text-[#FFC605] text-lg outline-none transition-colors">
+                            <label class="text-[#4A4A68] font-bold text-lg uppercase">Nome da restrição
+                                alimentar</label>
+                            <div class="relative bg-gray-50 border-b-4 border-[#FFC605] rounded-t-lg transition-colors">
+                                <input type="text" formControlName="restricao" id="restricao_input" placeholder=" "
+                                    class="peer w-full bg-transparent border-none py-6 px-4 focus:ring-0 text-black text-lg outline-none">
+
+                                <label for="restricao_input" class="absolute text-lg text-[#FFC605] font-medium duration-300 transform -translate-y-4 scale-75 top-5 z-10 origin-left left-4 
+                              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                              peer-focus:scale-75 peer-focus:-translate-y-4 cursor-text">
+                                    Restrição alimentar
+                                </label>
                             </div>
                         </div>
 
                         <div class="flex flex-col gap-3 text-left">
-                            <label class="text-black font-bold text-lg uppercase">Descrição da Restrição</label>
+                            <label class="text-[#4A4A68] font-bold text-lg uppercase">Descrição da Restrição</label>
                             <div
                                 class="bg-gray-50 border border-gray-200 rounded-xl p-3 focus-within:border-[#FFC605] transition-colors">
-                                <textarea formControlName="descricao" placeholder="Descreva os detalhes..."
-                                    class="w-full bg-transparent border-none focus:ring-0 text-black focus:text-[#FFC605] text-lg outline-none min-h-[180px] resize-none transition-colors"></textarea>
+                                <textarea formControlName="descricao" placeholder="Descrição..."
+                                    class="w-full bg-transparent border-none focus:ring-0 text-black text-lg outline-none min-h-[180px] resize-none"></textarea>
                             </div>
                         </div>
 
                         <div class="flex gap-6 pt-6 justify-center md:justify-end">
-                            <a routerLink="/home"
-                                class="w-44 text-center py-3 rounded-full border-2 border-black text-black font-bold text-lg hover:bg-gray-100 transition-all cursor-pointer">
+                            <button type="button" (click)="voltar()"
+                                class="w-44 text-center py-3 rounded-full border-2 border-[#FFC605] text-[#FFC605] font-bold text-lg hover:bg-gray-50 transition-all cursor-pointer">
                                 Voltar
-                            </a>
-
+                            </button>
                             <button type="submit" [disabled]="restricaoForm.invalid"
-                                class="w-44 py-3 rounded-full bg-[#ffeb99] hover:bg-[#FFC605] text-black font-bold text-lg transition-colors duration-300 shadow-md disabled:opacity-30">
+                                class="w-44 py-3 rounded-full bg-[#FFC605] hover:bg-[#e6b305] text-black font-bold text-lg transition-colors duration-300 shadow-md disabled:opacity-30">
                                 Solicitar
                             </button>
                         </div>

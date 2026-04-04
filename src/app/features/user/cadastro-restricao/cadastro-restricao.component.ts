@@ -42,16 +42,14 @@ export class CadastroRestricaoComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    isInvalid(campo: string): boolean {
-        const control = this.restricaoForm.get(campo);
-        return control ? control.invalid && (control.touched || control.dirty) : false;
+    voltar(): void {
+        this.router.navigate(['/']);
     }
 
     save(): void {
         if (this.restricaoForm.valid) {
             this.loadingService.show();
 
-            // O payload segue o modelo da entidade RestricaoAlimentar do seu Back-End
             const payload = {
                 restricao: this.restricaoForm.value.restricao,
                 descricao: this.restricaoForm.value.descricao
@@ -61,7 +59,7 @@ export class CadastroRestricaoComponent implements OnInit {
                 .pipe(finalize(() => this.loadingService.hide()))
                 .subscribe({
                     next: () => {
-                        this.notifier.showSuccess("Restrição cadastrada com sucesso!");
+                        this.notifier.showSuccess("Solicitação enviada! Aguarde a aprovação por e-mail.");
                         this.restricaoForm.reset();
                     },
                     error: (erro: any) => {
