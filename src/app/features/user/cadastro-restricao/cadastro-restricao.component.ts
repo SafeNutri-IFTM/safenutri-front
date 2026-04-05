@@ -36,11 +36,18 @@ export class CadastroRestricaoComponent implements OnInit {
     ) {
         this.restricaoForm = this.fb.group({
             restricao: ['', [Validators.required, Validators.minLength(3)]],
-            descricao: ['']
+            // Adicionado Validators.required aqui para a validação funcionar
+            descricao: ['', Validators.required] 
         });
     }
 
     ngOnInit(): void { }
+
+    // A função que o Angular estava sentindo falta para pintar as bordas de vermelho
+    isInvalid(campo: string): boolean {
+        const control = this.restricaoForm.get(campo);
+        return control ? control.invalid && (control.touched || control.dirty) : false;
+    }
 
     voltar(): void {
         this.router.navigate(['/']);
