@@ -14,7 +14,7 @@ export const UserRoutes: Routes = [
         component: CadastroReceitaComponent
     },
     {
-        path: 'restricoes',
-        component: CadastroRestricaoComponent // Esta linha deve funcionar agora
+        path: 'cadastro-restricao',
+        component: CadastroRestricaoComponent
     }
 ];
