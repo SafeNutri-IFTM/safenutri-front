@@ -1,43 +1,20 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-// Ajuste o caminho de importação para onde o seu LoginService real está localizado agora
+import { CanActivateFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { LoginService } from '../features/login/services/login.service';
 
-export const authGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-): Observable<boolean> => {
-
-  // No Angular moderno, usamos inject() em vez de declarar no construtor
+export const authGuard: CanActivateFn = (route, state) => {
   const loginService = inject(LoginService);
   const router = inject(Router);
-
-  // 1. Verifica localmente se existe um token
-  if (!loginService.isLogin()) {
-    loginService.logout();
-    router.navigate(['/auth/login']); // Redireciona o usuário para o login
-    return of(false);
+  if (loginService.isLogin()) {
+    return true;
   }
 
-  // 2. Valida o token no backend (sua rota /auth/verify-token)
-  return loginService.verificarTokenNoServidor().pipe(
-    map((isValid: boolean) => {
-      if (isValid) {
-        return true; // Token válido, acesso liberado!
-      } else {
-        loginService.logout();
-        router.navigate(['/auth/login']);
-        return false; // Token inválido, bloqueia
-      }
-    }),
-    catchError(() => {
-      // Se a API retornar erro (ex: 401 Unauthorized ou servidor fora do ar)
-      loginService.logout();
-      router.navigate(['/auth/login']);
-      return of(false);
-    })
-  );
+  // Se cair aqui, significa que isLogin() retornou false. Antes de expulsar, tentamos limpar resquícios para evitar loops.
+  loginService.logout();
+
+  // Redireciona para o login passando a URL que o usuário tentou acessar. Desse jeito, após o login, podemos mandá-lo de volta para onde ele queria.
+  router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+
+  return false;
 };
