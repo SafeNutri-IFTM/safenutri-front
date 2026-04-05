@@ -1,0 +1,22 @@
+.footer {
+  padding: 5px 80px;
+  text-align: center;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: #000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  transform: translateX(12px);
+}
