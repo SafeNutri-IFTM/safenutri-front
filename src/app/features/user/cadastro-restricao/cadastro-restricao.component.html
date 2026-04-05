@@ -29,7 +29,7 @@
                             <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Nome da restrição alimentar</h3>
 
                             <div class="relative bg-[#F8F9FA] border-b-2 transition-colors rounded-t-lg focus-within:!border-[#FFC605]"
-                                [ngClass]="restricaoForm.get('restricao')?.invalid && restricaoForm.get('restricao')?.touched ? 'border-red-500' : 'border-black'">
+                                [ngClass]="isInvalid('restricao') ? 'border-red-500' : 'border-black'">
 
                                 <input type="text" formControlName="restricao" id="restricao_input" placeholder=" "
                                     class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
@@ -42,7 +42,7 @@
                                 </label>
                             </div>
 
-                            <div *ngIf="restricaoForm.get('restricao')?.invalid && restricaoForm.get('restricao')?.touched"
+                            <div *ngIf="isInvalid('restricao')"
                                 class="text-red-500 text-xs mt-1 ml-1 flex flex-col">
                                 <span *ngIf="restricaoForm.get('restricao')?.errors?.['required']">O nome da restrição é obrigatório.</span>
                                 <span *ngIf="restricaoForm.get('restricao')?.errors?.['minlength']">Deve ter no mínimo 3 caracteres.</span>
@@ -53,13 +53,13 @@
                             <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Descrição da Restrição</h3>
 
                             <div class="relative bg-[#F8F9FA] border-b-2 transition-colors rounded-t-lg flex-grow flex focus-within:!border-[#FFC605]"
-                                [ngClass]="restricaoForm.get('descricao')?.invalid && restricaoForm.get('descricao')?.touched ? 'border-red-500' : 'border-black'">
+                                [ngClass]="isInvalid('descricao') ? 'border-red-500' : 'border-black'">
 
                                 <textarea formControlName="descricao" placeholder="Descrição..."
                                     class="w-full bg-transparent border-none pt-3 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none min-h-[140px] resize-none flex-grow"></textarea>
                             </div>
 
-                            <div *ngIf="restricaoForm.get('descricao')?.invalid && restricaoForm.get('descricao')?.touched"
+                            <div *ngIf="isInvalid('descricao')"
                                 class="text-red-500 text-xs mt-1 ml-1">
                                 A descrição é obrigatória.
                             </div>
