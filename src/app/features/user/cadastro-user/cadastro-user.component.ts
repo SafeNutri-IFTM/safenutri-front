@@ -135,7 +135,7 @@ export class CadastroUserComponent implements OnInit {
                 .subscribe({
                     next: (resposta) => {
                         this.notifier.showSuccess("Usuário cadastrado com sucesso!");
-                        this.router.navigate(['/login']);
+                        this.router.navigate(['/user/login']);
                     },
                     error: (erro) => {
                         console.error('Erro ao cadastrar usuário', erro);

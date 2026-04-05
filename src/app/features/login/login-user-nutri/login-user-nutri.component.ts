@@ -79,9 +79,9 @@ export class LoginUserNutriComponent implements OnInit {
         if (role === 'ADMIN') {
             this.router.navigate(['/cms/dashboard']);
         } else if (role === 'NUTRICIONISTA') {
-            this.router.navigate(['/user/home']);
+            this.router.navigate(['/nutri/feed']);
         } else {
-            this.router.navigate(['/user/cadastro-receita']);
+            this.router.navigate(['/user/feed']);
         }
     }
 
