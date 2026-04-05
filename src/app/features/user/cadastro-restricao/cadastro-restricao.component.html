@@ -1,16 +1,18 @@
-<div class="min-h-screen flex flex-col font-sans bg-white">
+<div class="min-h-screen flex flex-col font-['Arial'] bg-white">
     <app-navbar-login></app-navbar-login>
 
     <main class="grow flex items-center justify-center py-12 px-6">
         <div
             class="bg-white rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.08)] border border-gray-100 w-full max-w-6xl p-10 md:p-16">
 
-            <h1 class="text-4xl md:text-5xl font-bold text-[#4A4A68] text-center mb-16">Cadastro de Restrição alimentar
+            <h1 class="text-4xl md:text-5xl font-bold text-[#4A4A68] text-center mb-16">
+                Cadastro de Restrição alimentar
             </h1>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+
                 <div class="flex flex-col gap-8 text-left">
-                    <p class="text-black text-xl leading-relaxed font-medium">
+                    <p class="text-black text-xl leading-relaxed font-normal">
                         Caso você não tenha encontrado sua restrição alimentar, poderá solicitar seu cadastro no
                         sistema.
                         O administrador analisará sua solicitação e, caso seja aprovada, você receberá uma notificação
@@ -23,39 +25,55 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <form [formGroup]="restricaoForm" (ngSubmit)="save()" class="space-y-10">
+                    <form [formGroup]="restricaoForm" (ngSubmit)="save()" class="space-y-8">
 
-                        <div class="flex flex-col gap-3 text-left">
-                            <label class="text-[#4A4A68] font-bold text-lg uppercase">Nome da restrição
-                                alimentar</label>
-                            <div class="relative bg-gray-50 border-b-4 border-[#FFC605] rounded-t-lg transition-colors">
+                        <div class="flex flex-col gap-2 text-left">
+                            <label class="text-[#4A4A68] font-bold text-sm">Nome da restrição alimentar</label>
+
+                            <div class="relative bg-[#F8F9FA] border-b-[3px] transition-colors rounded-t-lg"
+                                [ngClass]="restricaoForm.get('restricao')?.invalid && restricaoForm.get('restricao')?.touched ? 'border-red-500' : 'border-black focus-within:border-[#FFC605]'">
+
                                 <input type="text" formControlName="restricao" id="restricao_input" placeholder=" "
-                                    class="peer w-full bg-transparent border-none py-6 px-4 focus:ring-0 text-black text-lg outline-none">
+                                    class="peer block w-full bg-transparent border-none px-4 pt-6 pb-2 focus:ring-0 text-black text-sm font-normal outline-none appearance-none">
 
-                                <label for="restricao_input" class="absolute text-lg text-[#FFC605] font-medium duration-300 transform -translate-y-4 scale-75 top-5 z-10 origin-left left-4 
-                              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                              peer-focus:scale-75 peer-focus:-translate-y-4 cursor-text">
+                                <label for="restricao_input"
+                                    class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 
+                                    peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                                    peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">
                                     Restrição alimentar
                                 </label>
                             </div>
+
+                            <div *ngIf="restricaoForm.get('restricao')?.invalid && restricaoForm.get('restricao')?.touched"
+                                class="text-red-500 text-xs mt-1 ml-1">
+                                O nome da restrição é obrigatório.
+                            </div>
                         </div>
 
-                        <div class="flex flex-col gap-3 text-left">
-                            <label class="text-[#4A4A68] font-bold text-lg uppercase">Descrição da Restrição</label>
-                            <div
-                                class="bg-gray-50 border border-gray-200 rounded-xl p-3 focus-within:border-[#FFC605] transition-colors">
-                                <textarea formControlName="descricao" placeholder="Descrição..."
-                                    class="w-full bg-transparent border-none focus:ring-0 text-black text-lg outline-none min-h-[180px] resize-none"></textarea>
+                        <div class="flex flex-col gap-2 text-left">
+                            <label class="text-[#4A4A68] font-bold text-sm">Descrição...</label>
+
+                            <div class="relative bg-[#F8F9FA] border-b-[3px] transition-colors rounded-t-lg"
+                                [ngClass]="restricaoForm.get('descricao')?.invalid && restricaoForm.get('descricao')?.touched ? 'border-red-500' : 'border-black focus-within:border-[#FFC605]'">
+
+                                <textarea formControlName="descricao" placeholder="Descreva..."
+                                    class="w-full bg-transparent border-none pt-4 pb-2 px-4 focus:ring-0 text-black text-sm font-normal outline-none min-h-[140px] resize-none"></textarea>
+                            </div>
+
+                            <div *ngIf="restricaoForm.get('descricao')?.invalid && restricaoForm.get('descricao')?.touched"
+                                class="text-red-500 text-xs mt-1 ml-1">
+                                A descrição é obrigatória.
                             </div>
                         </div>
 
                         <div class="flex gap-6 pt-6 justify-center md:justify-end">
                             <button type="button" (click)="voltar()"
-                                class="w-44 text-center py-3 rounded-full border-2 border-[#FFC605] text-[#FFC605] font-bold text-lg hover:bg-gray-50 transition-all cursor-pointer">
+                                class="w-44 text-center py-3 rounded-full bg-white border-2 border-[#FFC605] text-[#FFC605] font-bold text-lg hover:bg-gray-50 shadow-md transition-all cursor-pointer">
                                 Voltar
                             </button>
+
                             <button type="submit" [disabled]="restricaoForm.invalid"
-                                class="w-44 py-3 rounded-full bg-[#FFC605] hover:bg-[#e6b305] text-black font-bold text-lg transition-colors duration-300 shadow-md disabled:opacity-30">
+                                class="w-44 py-3 rounded-full bg-[#FFC605] hover:bg-[#e6b305] text-[#4A4A68] font-bold text-lg transition-colors duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
                                 Solicitar
                             </button>
                         </div>
