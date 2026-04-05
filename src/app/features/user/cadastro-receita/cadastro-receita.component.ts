@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Router } from '@angular/router'; // 1. Importamos o Router aqui
+import { Router } from '@angular/router'; 
+
+// Componentes
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { RestricaoAlimentarComponent } from '../../../components/restricao-alimentar/restricao-alimentar.component';
@@ -30,15 +32,29 @@ import { RestricaoAlimentarComponent } from '../../../components/restricao-alime
   `]
 })
 export class CadastroReceitaComponent implements OnInit {
+  
+  // === VARIÁVEIS GERAIS ===
   receitaForm!: FormGroup;
 
-  // 2. Injetamos o Router no construtor (e removemos o Location)
+  // === VARIÁVEIS DO DROPDOWN (TIPO DE RECEITA) ===
+  dropdownTipo = false;
+  opcoesTipo = [
+    { label: 'Salgada', value: 'SALGADA' },
+    { label: 'Doce', value: 'DOCE' },
+    { label: 'Agridoce', value: 'AGRIDOCE' },
+    { label: 'Molho', value: 'MOLHO' },
+    { label: 'Bebida', value: 'BEBIDA' }
+  ];
+
   constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.receitaForm = this.fb.group({
       titulo: ['', Validators.required],
       descricao: ['', Validators.required],
+      tipoReceita: ['', Validators.required],
+      porcoes: ['', [Validators.required, Validators.min(1)]],
+      tempoPreparo: ['', Validators.required],     
       restricao: [[]],
       calorias: ['', Validators.required],
       ingredientes: this.fb.array([this.criarIngrediente()]),
@@ -46,14 +62,22 @@ export class CadastroReceitaComponent implements OnInit {
     });
   }
 
-  // === MÉTODO PARA VOLTAR DIRETO PARA A TELA INICIAL ===
+  // ==========================================
+  //      MÉTODOS DE CONTROLE DO FORMULÁRIO
+  // ==========================================
+
+  salvar(): void {
+    if (this.receitaForm.valid) {
+      console.log('Formulário válido! Pronto para enviar para a API:', this.receitaForm.value);
+    } else {
+      this.receitaForm.markAllAsTouched();
+    }
+  }
+
   voltar(): void {
-    // Aqui usamos '/' que geralmente é a rota inicial do Angular. 
-    // Se a sua rota de home tiver outro nome, basta mudar para ['/home'], por exemplo.
     this.router.navigate(['/']); 
   }
 
-  // === VALIDAÇÕES ===
   isInvalid(campo: string): boolean {
     const control = this.receitaForm.get(campo);
     return control ? control.invalid && (control.touched || control.dirty) : false;
@@ -65,15 +89,62 @@ export class CadastroReceitaComponent implements OnInit {
     return control ? control.invalid && (control.touched || control.dirty) : false;
   }
 
-  salvar(): void {
-    if (this.receitaForm.valid) {
-      console.log('Formulário válido! Pronto para enviar para a API:', this.receitaForm.value);
-    } else {
-      this.receitaForm.markAllAsTouched();
-    }
+  // ==========================================
+  //      MÉTODOS DO DROPDOWN (TIPO DE RECEITA)
+  // ==========================================
+
+  get labelTipo() {
+    const val = this.receitaForm.get('tipoReceita')?.value;
+    return this.opcoesTipo.find(op => op.value === val)?.label || 'Tipo';
   }
 
-  // === MÉTODOS PARA INGREDIENTES ===
+  toggleDropdownTipo(event: Event): void {
+    event.stopPropagation();
+    this.dropdownTipo = !this.dropdownTipo;
+  }
+
+  fecharDropdowns(): void {
+    this.dropdownTipo = false;
+  }
+
+  selecionarOpcaoTipo(valor: string, event: Event): void {
+    event.stopPropagation();
+    const controle = this.receitaForm.get('tipoReceita');
+    controle?.setValue(valor);
+    controle?.markAsTouched();
+    this.fecharDropdowns();
+  }
+
+  // ==========================================
+  //      MÉTODOS DE PORÇÕES
+  // ==========================================
+
+  incrementarPorcao(): void {
+    const controle = this.receitaForm.get('porcoes');
+    const valorAtual = Number(controle?.value) || 0;
+    controle?.setValue(valorAtual + 1);
+    
+    // Força a validação visual
+    controle?.markAsTouched();
+    controle?.markAsDirty();
+  }
+
+  decrementarPorcao(): void {
+    const controle = this.receitaForm.get('porcoes');
+    const valorAtual = Number(controle?.value) || 0;
+    if (valorAtual > 0) {
+      controle?.setValue(valorAtual - 1);
+    }
+    
+    // Força a validação visual
+    controle?.markAsTouched();
+    controle?.markAsDirty();
+  }
+
+  // ==========================================
+  //      MÉTODOS DE INGREDIENTES
+  // ==========================================
+
   get ingredientes(): FormArray {
     return this.receitaForm.get('ingredientes') as FormArray;
   }
@@ -100,6 +171,10 @@ export class CadastroReceitaComponent implements OnInit {
     const controle = this.ingredientes.at(index).get('quantidade');
     const valorAtual = Number(controle?.value) || 0;
     controle?.setValue(valorAtual + 1);
+    
+    // Força a validação visual
+    controle?.markAsTouched();
+    controle?.markAsDirty();
   }
 
   decrementarQuantidade(index: number): void {
@@ -108,9 +183,16 @@ export class CadastroReceitaComponent implements OnInit {
     if (valorAtual > 0) {
       controle?.setValue(valorAtual - 1);
     }
+    
+    // Força a validação visual
+    controle?.markAsTouched();
+    controle?.markAsDirty();
   }
 
-  // === MÉTODOS PARA PASSOS ===
+  // ==========================================
+  //      MÉTODOS DE PASSOS DE PREPARO
+  // ==========================================
+
   get passos(): FormArray {
     return this.receitaForm.get('passos') as FormArray;
   }
