@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { CadastroUserComponent } from './cadastro-user/cadastro-user.component';
 
 import { CadastroReceitaComponent } from './cadastro-receita/cadastro-receita.component';
+import { authGuard } from '../../guards/login-guard.service';
 
 export const UserRoutes: Routes = [
     {
@@ -11,6 +12,7 @@ export const UserRoutes: Routes = [
     },
     {
         path: 'cadastro-receita',
-        component: CadastroReceitaComponent
+        component: CadastroReceitaComponent,
+        canActivate: [authGuard]
     }
 ];

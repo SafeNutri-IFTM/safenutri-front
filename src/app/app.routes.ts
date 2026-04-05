@@ -16,13 +16,11 @@ export const routes: Routes = [
   {
     // Área do Usuário (Protegida)
     path: 'user',
-    canActivate: [authGuard], // 🔒 Bloqueia o acesso se não tiver token
     loadChildren: () => import('./features/user/user.routing').then(m => m.UserRoutes)
   },
   {
     // Área do Nutricionista (Protegida)
     path: 'nutri',
-    canActivate: [authGuard], // 🔒 Bloqueia o acesso se não tiver token
     loadChildren: () => import('./features/nutricionista/nutri.routing').then(m => m.NutriRoutes)
   },
   {

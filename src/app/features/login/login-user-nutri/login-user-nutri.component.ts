@@ -9,6 +9,8 @@ import { FooterComponent } from '../../../components/footer/footer.component';
 import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
 import { LoginService } from '../services/login.service';
 import { LoginInput } from '../../../interfaces/input/loginInput';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
 
 @Component({
     selector: 'app-login-user-nutri',
@@ -19,9 +21,10 @@ import { LoginInput } from '../../../interfaces/input/loginInput';
         FormsModule,
         MatIconModule,
         RouterModule,
-        NavbarComponent,
         FooterComponent,
-        // ButtonPrimaryComponent
+        ButtonPrimaryComponent,
+        SpinnerComponent,
+        NavbarLoginComponent
     ],
     templateUrl: './login-user-nutri.component.html',
     styleUrl: './login-user-nutri.component.css'
@@ -39,7 +42,7 @@ export class LoginUserNutriComponent implements OnInit {
     ngOnInit(): void {
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            password: ['', [Validators.required, Validators.minLength(5)]]
         });
     }
 
