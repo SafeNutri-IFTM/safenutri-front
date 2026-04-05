@@ -11,6 +11,7 @@ import { LoginService } from '../services/login.service';
 import { LoginInput } from '../../../interfaces/input/loginInput';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
+import { NotifierService } from '../../../services/notifier.service';
 
 @Component({
     selector: 'app-login-user-nutri',
@@ -30,10 +31,11 @@ import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-lo
     styleUrl: './login-user-nutri.component.css'
 })
 export class LoginUserNutriComponent implements OnInit {
-    // Injeções modernas
     private fb = inject(FormBuilder);
     private loginService = inject(LoginService);
     private router = inject(Router);
+    private notifier = inject(NotifierService);
+
 
     loginForm!: FormGroup;
     showPasswordToggle = false;
@@ -57,35 +59,29 @@ export class LoginUserNutriComponent implements OnInit {
 
         this.loginService.login(dadosLogin).subscribe({
             next: (res) => {
-                // 1. Salva o token no LocalStorage
+                this.notifier.showSuccess('Login realizado com sucesso!');
+
                 this.loginService.salvarToken(res.token);
 
-                // 2. Pega as Claims para saber quem logou (User ou Nutri)
                 const claims = this.loginService.obterClaimsJwt();
-
                 if (claims) {
                     this.redirecionarPorRole(claims.role);
                 }
-
-                this.loading = false;
             },
             error: (err) => {
                 this.loading = false;
-                console.error('Erro no login', err);
-                alert('E-mail ou senha incorretos.');
+                this.notifier.showError('Email ou senha incorretos.');
             }
         });
     }
 
     private redirecionarPorRole(role: string) {
-        // Lógica de redirecionamento inteligente
         if (role === 'ADMIN') {
             this.router.navigate(['/cms/dashboard']);
         } else if (role === 'NUTRICIONISTA') {
-            this.router.navigate(['/nutri/home']);
-        } else {
-            // Padrão para USER
             this.router.navigate(['/user/home']);
+        } else {
+            this.router.navigate(['/user/cadastro-receita']);
         }
     }
 
