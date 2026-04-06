@@ -4,13 +4,13 @@ import { FooterComponent } from "../../../components/footer/footer.component";
 import { NavbarFeedComponent } from "../../../components/navbar-feed/navbar-feed.component";
 
 @Component({
-    selector: 'app-feed-user',
+    selector: 'app-feed-nutri',
     standalone: true,
     imports: [
         FooterComponent,
         NavbarFeedComponent,
     ],
-    templateUrl: './feed-user.component.html',
+    templateUrl: './feed-nutri.component.html',
     styles: []
 })
 export class FeedUserComponent {}
