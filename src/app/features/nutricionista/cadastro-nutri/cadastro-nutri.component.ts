@@ -8,7 +8,7 @@ import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-lo
 import { roles } from '../../../const/roles';
 import { NutricionistaService } from '../services/nutri.service';
 import { UserService } from '../../user/services/user.service';
-import { NutricionistaInput } from '../../../interfaces/input/NutricionistaInput';
+import { NutricionistaInput } from '../../../interfaces/input/nutricionistaInput';
 import { NotifierService } from '../../../services/notifier.service';
 
 import { finalize } from 'rxjs/operators';

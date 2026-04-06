@@ -130,7 +130,7 @@ export class CadastroUserComponent implements OnInit {
 
             this.loadingService.show();
 
-            this.userService.create(payload)
+            this.userService.createUser(payload)
                 .pipe(finalize(() => this.loadingService.hide()))
                 .subscribe({
                     next: (resposta) => {
