@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
 
 @Component({
     selector: 'app-home-page',
@@ -16,7 +17,8 @@ import { FooterComponent } from '../../../components/footer/footer.component';
         MatIconModule,
         RouterModule,
         NavbarComponent,
-        FooterComponent
+        FooterComponent,
+        ButtonPrimaryComponent
     ],
     templateUrl: './home-page.component.html',
     styleUrl: './home-page.component.css'

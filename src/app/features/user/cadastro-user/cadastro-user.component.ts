@@ -2,17 +2,21 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 import { UserService } from '../services/user.service';
-import { UserInput } from '../../../interfaces/input/UserInput';
+import { UserInput } from '../../../interfaces/input/userInput';
 import { NotifierService } from '../../../services/notifier.service';
 import { LoadingService } from '../../../services/loading.service';
 import { roles } from '../../../const/roles';
+import { RestricaoAlimentarComponent } from '../../../components/restricao-alimentar/restricao-alimentar.component';
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
+
+import { DocumentosLegaisModalComponent } from '../../documentosLegais/documentos-legais-modal/documentos-legais-modal.component';
+import { DocumentosLegaisService } from '../../documentosLegais/services/documentos-legais.service';
 
 @Component({
     selector: 'app-cadastro-usuario',
@@ -24,7 +28,10 @@ import { roles } from '../../../const/roles';
         RouterModule,
         NavbarLoginComponent,
         FooterComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        RestricaoAlimentarComponent,
+        ButtonPrimaryComponent,
+        DocumentosLegaisModalComponent
     ],
     templateUrl: './cadastro-user.component.html',
     styles: [`
@@ -35,12 +42,11 @@ import { roles } from '../../../const/roles';
 export class CadastroUserComponent implements OnInit {
     userForm: FormGroup;
     hidePassword = true;
-
-    dropdownRestricao = false;
     dropdownGenero = false;
-
-    opcoesRestricao: any[] = [];
     opcoesGenero: any[] = [];
+    isModalOpen = false;
+    modalTitulo = '';
+    modalTexto = '';
 
     @ViewChild('datePicker') datePicker!: ElementRef;
 
@@ -49,54 +55,54 @@ export class CadastroUserComponent implements OnInit {
         private router: Router,
         private userService: UserService,
         private notifier: NotifierService,
-        private loadingService: LoadingService
+        private loadingService: LoadingService,
+        private documentosService: DocumentosLegaisService
     ) {
         this.userForm = this.fb.group({
             nome: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
             senha: ['', [Validators.required, Validators.minLength(5)]],
             dataNascimento: ['', Validators.required],
-            restricaoAlimentar: [[], Validators.required], // Inicia como Array Vazio
-            genero: ['', Validators.required]
+            restricaoAlimentar: [[], Validators.required],
+            genero: ['', Validators.required],
+            aceitoTermos: [false, Validators.requiredTrue]
         });
     }
 
     ngOnInit(): void {
-        forkJoin({
-            generos: this.userService.getGeneros(),
-            restricoes: this.userService.getRestricao()
-        }).subscribe({
-            next: (retorno: any) => {
-                this.opcoesGenero = retorno.generos.map((g: any) => ({
+        this.userService.getGeneros().subscribe({
+            next: (generos: any) => {
+                this.opcoesGenero = generos.map((g: any) => ({
                     label: g.genero,
                     value: g.id
                 }));
-
-                this.opcoesRestricao = retorno.restricoes.map((r: any) => ({
-                    label: r.restricao,
-                    value: r.id
-                }));
             },
-            error: (err) => {
-                console.error('Erro ao carregar dados de domínio', err);
-            }
+            error: (err) => console.error('Erro ao carregar gêneros', err)
         });
+    }
+
+    abrirDocumento(tipo: string, titulo: string, event: Event): void {
+        event.preventDefault();
+        this.loadingService.show();
+
+        this.documentosService.getAtualPorTipo(tipo)
+            .pipe(finalize(() => this.loadingService.hide()))
+            .subscribe({
+                next: (doc) => {
+                    this.modalTitulo = titulo;
+                    this.modalTexto = doc.texto;
+                    this.isModalOpen = true;
+                },
+                error: (err) => {
+                    console.error('Erro ao buscar documento', err);
+                    this.notifier.showError("Erro ao carregar o documento. Tente novamente.");
+                }
+            });
     }
 
     isInvalid(campo: string): boolean {
         const control = this.userForm.get(campo);
         return control ? control.invalid && (control.touched || control.dirty) : false;
-    }
-
-    // Atualizado para lidar com Array e juntar as opções com vírgula
-    get labelRestricao() {
-        const val = this.userForm.get('restricaoAlimentar')?.value || [];
-        if (val.length === 0) return 'Restrições alimentares';
-
-        return this.opcoesRestricao
-            .filter(op => val.includes(op.value))
-            .map(op => op.label)
-            .join(', ');
     }
 
     get labelGenero() {
@@ -106,54 +112,21 @@ export class CadastroUserComponent implements OnInit {
 
     toggleDropdown(tipo: string, event: Event): void {
         event.stopPropagation();
-        if (tipo === 'restricao') {
-            this.dropdownRestricao = !this.dropdownRestricao;
-            this.dropdownGenero = false;
-        } else if (tipo === 'genero') {
-            this.dropdownGenero = !this.dropdownGenero;
-            this.dropdownRestricao = false;
-        }
+        if (tipo === 'genero') this.dropdownGenero = !this.dropdownGenero;
     }
 
-    fecharDropdowns(): void {
-        this.dropdownRestricao = false;
-        this.dropdownGenero = false;
-    }
+    fecharDropdowns(): void { this.dropdownGenero = false; }
 
-    // Lógica atualizada para lidar com Multi-Select na restrição alimentar
     selecionarOpcao(campo: string, valor: string | number, event: Event): void {
         event.stopPropagation();
-
         const controle = this.userForm.get(campo);
-
-        if (campo === 'restricaoAlimentar') {
-            const valoresAtuais = controle?.value || [];
-            const index = valoresAtuais.indexOf(valor);
-
-            if (index > -1) {
-                valoresAtuais.splice(index, 1); // Remove se já estiver selecionado
-            } else {
-                valoresAtuais.push(valor); // Adiciona se não estiver
-            }
-
-            controle?.setValue([...valoresAtuais]);
-            controle?.markAsTouched();
-            // Não fechamos o dropdown aqui para o usuário poder clicar em mais opções!
-        } else {
-            // Lógica padrão para os outros campos (ex: Gênero)
-            controle?.setValue(valor);
-            controle?.markAsTouched();
-            this.fecharDropdowns();
-        }
+        controle?.setValue(valor);
+        controle?.markAsTouched();
+        this.fecharDropdowns();
     }
 
-    togglePasswordVisibility(): void {
-        this.hidePassword = !this.hidePassword;
-    }
-
-    irParaNutricionista(): void {
-        this.router.navigate(['/nutri/register']);
-    }
+    togglePasswordVisibility(): void { this.hidePassword = !this.hidePassword; }
+    irParaNutricionista(): void { this.router.navigate(['/nutri/register']); }
 
     save(): void {
         if (this.userForm.valid) {
@@ -171,22 +144,18 @@ export class CadastroUserComponent implements OnInit {
 
             this.loadingService.show();
 
-            this.userService.create(payload)
+            this.userService.createUser(payload)
                 .pipe(finalize(() => this.loadingService.hide()))
                 .subscribe({
-                    next: (resposta) => {
+                    next: () => {
                         this.notifier.showSuccess("Usuário cadastrado com sucesso!");
-                        this.router.navigate(['/login']);
+                        this.router.navigate(['/user/login']);
                     },
                     error: (erro) => {
-                        console.error('Erro ao cadastrar usuário', erro);
-
-                        const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar usuário. Verifique os dados.";
-
+                        const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar usuário.";
                         this.notifier.showError(mensagemBackend);
                     }
                 });
-
         } else {
             this.userForm.markAllAsTouched();
         }

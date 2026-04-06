@@ -1,0 +1,90 @@
+<div class="min-h-screen flex flex-col font-['Arial'] bg-white">
+    <app-navbar-login></app-navbar-login>
+
+    <main class="grow flex items-center justify-center py-10 px-4">
+        <div
+            class="bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 w-full max-w-5xl p-8 md:p-12">
+
+            <h2 class="text-2xl md:text-3xl font-medium text-center text-[#2A2B3D] mb-10">
+                Cadastro de Restrição alimentar
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+
+                <div class="flex flex-col gap-6 text-left pt-2">
+                    <p class="text-[#4A4B5D] text-[16px] md:text-[18px] font-normal leading-relaxed text-justify">
+                        Caso você não tenha encontrado sua restrição alimentar, poderá solicitar seu cadastro no
+                        sistema. O administrador analisará sua solicitação e, caso seja aprovada, você receberá uma
+                        notificação
+                        por e-mail.
+                    </p>
+                    <div class="flex justify-center mt-2 w-full">
+                        <img src="assets/cadastro-restricao.png" alt="Ilustração"
+                            class="w-full max-w-[300px] object-contain opacity-95">
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <form [formGroup]="restricaoForm" (ngSubmit)="save()" class="flex flex-col gap-6">
+
+                        <div>
+                            <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Nome da restrição alimentar</h3>
+
+                            <div class="relative bg-[#F8F9FA] border-b-2 transition-colors rounded-t-lg focus-within:!border-[#FFC605]"
+                                [ngClass]="isInvalid('restricao') ? 'border-red-500' : 'border-black'">
+
+                                <input type="text" formControlName="restricao" id="restricao_input" placeholder=" "
+                                    class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
+
+                                <label for="restricao_input"
+                                    class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 
+                                    peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                                    peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">
+                                    Restrição alimentar
+                                </label>
+                            </div>
+
+                            <div *ngIf="isInvalid('restricao')" class="text-red-500 text-xs mt-1 ml-1 flex flex-col">
+                                <span *ngIf="restricaoForm.get('restricao')?.errors?.['required']">O nome da restrição é
+                                    obrigatório.</span>
+                                <span *ngIf="restricaoForm.get('restricao')?.errors?.['minlength']">Deve ter no mínimo 3
+                                    caracteres.</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Descrição da Restrição</h3>
+
+                            <div class="relative bg-[#F8F9FA] border-b-2 transition-colors rounded-t-lg flex-grow flex focus-within:!border-[#FFC605]"
+                                [ngClass]="isInvalid('descricao') ? 'border-red-500' : 'border-black'">
+
+                                <textarea formControlName="descricao" placeholder="Descrição..."
+                                    class="w-full bg-transparent border-none pt-3 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none min-h-[140px] resize-none flex-grow"></textarea>
+                            </div>
+
+                            <div *ngIf="isInvalid('descricao')" class="text-red-500 text-xs mt-1 ml-1">
+                                A descrição é obrigatória.
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 pt-6 w-full mt-4">
+
+                            <div class="flex-1">
+                                <app-button-secundary (click)="voltar()" value="Voltar"></app-button-secundary>
+                            </div>
+
+                            <div class="flex-1" [ngClass]="{'opacity-50 pointer-events-none': restricaoForm.invalid}">
+
+                                <app-button-primary value="Solicitar"></app-button-primary>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <app-spinner></app-spinner>
+    <app-footer></app-footer>
+</div>

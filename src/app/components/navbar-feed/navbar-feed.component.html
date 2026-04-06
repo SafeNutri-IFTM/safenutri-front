@@ -1,0 +1,38 @@
+<div class="bg-amber-400 border-b border-amber-500/10 shadow-xl shadow-black/10 px-6">
+  <div class="flex items-center justify-between h-20">
+    <a routerLink="/user/feed" routerLinkActive="active">
+      <img src="../assets/LogoSafeNutri.png" alt="Logo">
+    </a>
+
+    <nav class="lg:flex gap-8 font-semibold text-[15px] items-center h-full text-white">
+      <a href="user/feed" class="h-full flex items-center">Página Inicial</a>
+      <a href="user/cadastro-receita" class="h-full flex items-center">Cadastrar Receitas</a>
+      <a href="#" class="h-full flex items-center">Minhas Receitas</a>
+      <a href="#" class="h-full flex items-center">Receitas Avaliadas</a>
+      <a href="#" class="h-full flex items-center">Receitas Favoritas</a>
+    </nav>
+
+    <div class="relative">
+      <button (click)="toggleMenu()"
+        class="bg-white text-black px-2 py-2 rounded-full flex items-center gap-3 text-sm shadow hover:bg-gray-50 transition-colors">
+        <div class="w-7 h-7 rounded-full flex items-center justify-center text-gray-500">
+          <img src="./assets/Avatar.png" alt="Avatar do Usuário">
+        </div>
+        <span class="font-medium">Nome</span>
+        <span class="text-[10px] transition-transform duration-200" [class.rotate-180]="isMenuOpen">▼</span>
+      </button>
+
+      <div *ngIf="isMenuOpen"
+        class="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 text-black text-sm flex flex-col">
+        <a href="#" class="px-4 py-2.5 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700">
+          <img src="./assets/avatar-menu.png" alt="Avatar do Usuário"> Meu perfil
+        </a>
+        <a (click)="sair()"
+          class="cursor-pointer px-4 py-2.5 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700">
+          <img src="./assets/logout.png" alt="Sair"> Sair
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

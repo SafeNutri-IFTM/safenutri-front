@@ -8,13 +8,18 @@ import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-lo
 import { roles } from '../../../const/roles';
 import { NutricionistaService } from '../services/nutri.service';
 import { UserService } from '../../user/services/user.service';
-import { NutricionistaInput } from '../../../interfaces/input/NutricionistaInput';
+import { NutricionistaInput } from '../../../interfaces/input/nutricionistaInput';
 import { NotifierService } from '../../../services/notifier.service';
 
 import { finalize } from 'rxjs/operators';
 
 import { LoadingService } from '../../../services/loading.service';
 import { SpinnerComponent } from "../../../components/spinner/spinner.component";
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
+
+
+import { DocumentosLegaisModalComponent } from '../../documentosLegais/documentos-legais-modal/documentos-legais-modal.component';
+import { DocumentosLegaisService } from '../../documentosLegais/services/documentos-legais.service';
 
 @Component({
     selector: 'app-cadastro-nutricionista',
@@ -26,7 +31,9 @@ import { SpinnerComponent } from "../../../components/spinner/spinner.component"
         RouterModule,
         NavbarLoginComponent,
         FooterComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        ButtonPrimaryComponent,
+        DocumentosLegaisModalComponent
     ],
     templateUrl: './cadastro-nutri.component.html',
     styles: [`
@@ -56,6 +63,9 @@ export class CadastroNutriComponent implements OnInit {
     ];
 
     opcoesGenero: any[] = [];
+    isModalOpen = false;
+    modalTitulo = '';
+    modalTexto = '';
 
     constructor(
         private fb: FormBuilder,
@@ -64,6 +74,7 @@ export class CadastroNutriComponent implements OnInit {
         private userService: UserService,
         private notifier: NotifierService,
         private loadingService: LoadingService,
+        private documentosService: DocumentosLegaisService
     ) {
         this.nutriForm = this.fb.group({
             nome: ['', [Validators.required, Validators.minLength(3)]],
@@ -72,7 +83,8 @@ export class CadastroNutriComponent implements OnInit {
             dataNascimento: ['', Validators.required],
             crnEstado: ['', Validators.required],
             crnNumero: ['', Validators.required],
-            genero: ['', Validators.required]
+            genero: ['', Validators.required],
+            aceitoTermos: [false, Validators.requiredTrue]
         });
     }
 
@@ -134,6 +146,25 @@ export class CadastroNutriComponent implements OnInit {
         this.router.navigate(['/user/register']);
     }
 
+    abrirDocumento(tipo: string, titulo: string, event: Event): void {
+        event.preventDefault();
+        this.loadingService.show();
+
+        this.documentosService.getAtualPorTipo(tipo)
+            .pipe(finalize(() => this.loadingService.hide()))
+            .subscribe({
+                next: (doc) => {
+                    this.modalTitulo = titulo;
+                    this.modalTexto = doc.texto;
+                    this.isModalOpen = true;
+                },
+                error: (err) => {
+                    console.error('Erro ao buscar documento', err);
+                    this.notifier.showError("Erro ao carregar o documento. Tente novamente.");
+                }
+            });
+    }
+
     save(): void {
         if (this.nutriForm.valid) {
             const formValues = this.nutriForm.value;
@@ -162,13 +193,11 @@ export class CadastroNutriComponent implements OnInit {
                 .subscribe({
                     next: () => {
                         this.notifier.showSuccess("Nutricionista cadastrado com sucesso!");
-                        this.router.navigate(['/login']);
+                        this.router.navigate(['/user/login']);
                     },
                     error: (erro) => {
                         console.error('Erro ao cadastrar nutricionista', erro);
-
                         const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar: Verifique os dados ou o CRN.";
-
                         this.notifier.showError(mensagemBackend);
                     }
                 });

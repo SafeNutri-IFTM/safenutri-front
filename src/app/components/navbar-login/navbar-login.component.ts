@@ -19,5 +19,11 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarLoginComponent {
 
+    get rotaDoLogo(): string {
+        const isLogged = !!sessionStorage.getItem('token');
+
+        // Se estiver logado, vai pro feed. Se não, vai pra home
+        return isLogged ? '/user/feed' : '/home/home';
+    }
 }
 
