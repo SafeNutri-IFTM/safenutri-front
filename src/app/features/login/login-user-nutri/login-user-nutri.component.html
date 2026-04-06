@@ -11,37 +11,45 @@
             <form [formGroup]="loginForm" (ngSubmit)="efetuarLogin()" class="space-y-4">
 
                 <div>
-                    <div
-                        class="relative bg-[#F8F9FA] border-b-2 border-black focus-within:border-[#FFC605] transition-colors rounded-t-lg">
+                    <div class="relative bg-[#F8F9FA] border-b-2 border-black focus-within:border-[#FFC605] transition-colors rounded-t-lg"
+                        [ngClass]="{'border-red-500': isInvalid('email')}">
+
                         <input type="email" formControlName="email" id="email" placeholder=" "
                             class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-black text-sm font-normal outline-none">
-                        <label for="email"
-                            class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">
+
+                        <label for="email" class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 
+            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+            peer-focus:scale-75 peer-focus:-translate-y-3 
+            peer-focus:text-[#FFC605] cursor-text">
                             Email
                         </label>
+                    </div>
+
+                    <div *ngIf="isInvalid('email')" class="text-red-500 text-xs mt-1 ml-1">
+                        <span *ngIf="loginForm.get('email')?.errors?.['required']">
+                            O email é obrigatório.
+                        </span>
+                        <span *ngIf="loginForm.get('email')?.errors?.['email']">
+                            Digite um email válido.
+                        </span>
                     </div>
                 </div>
 
                 <div>
-                    <div
-                        class="relative bg-[#F8F9FA] border-b-2 border-black focus-within:border-[#FFC605] transition-colors rounded-t-lg flex items-center justify-between">
+                    <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg"
+                        [ngClass]="isInvalid('password') ? 'border-red-500' : 'border-black'">
 
-                        <div class="grow relative">
-                            <input [type]="showPasswordToggle ? 'text' : 'password'" formControlName="password"
-                                id="password" placeholder=" "
-                                class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-black text-sm font-normal outline-none">
+                        <input [type]="showPasswordToggle ? 'text' : 'password'" formControlName="password"
+                            id="password" placeholder=" "
+                            class="peer w-full bg-transparent border-none pt-6 pb-2 pl-3 pr-10 focus:ring-0 text-black text-sm font-normal outline-none">
 
-                            <label for="password" class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 
-                peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                peer-focus:scale-75 peer-focus:-translate-y-3 
-                peer-focus:text-[#FFC605] cursor-text">
-                                Senha
-                            </label>
-                        </div>
+                        <label for="password"
+                            class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">
+                            Senha
+                        </label>
 
                         <button type="button" (click)="togglePassword()"
-                            class="cursor-pointer text-gray-500 hover:text-black focus:outline-none pr-3 pt-4 transition-colors"
-                            aria-label="Mostrar senha">
+                            class="absolute right-3 top-[25px] cursor-pointer text-gray-500 hover:text-black focus:outline-none transition-colors">
 
                             <svg *ngIf="!showPasswordToggle" class="w-5 h-5 pointer-events-none" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
@@ -61,7 +69,13 @@
                             </svg>
                         </button>
                     </div>
+                    <div *ngIf="isInvalid('password')" class="text-red-500 text-xs mt-1 ml-1">
+                        <span *ngIf="loginForm.get('password')?.errors?.['required']">A senha é obrigatória.</span>
+                        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">A senha deve ter no mínimo 5
+                            caracteres.</span>
+                    </div>
                 </div>
+
 
                 <div>
                     <a routerLink="" class="text-sm text-yellow-500 hover:underline">

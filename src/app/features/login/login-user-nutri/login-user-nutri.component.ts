@@ -26,7 +26,13 @@ import { NotifierService } from '../../../services/notifier.service';
         NavbarLoginComponent
     ],
     templateUrl: './login-user-nutri.component.html',
-    styleUrl: './login-user-nutri.component.css'
+    styleUrl: './login-user-nutri.component.css',
+    styles: [`
+        input[type="password"]::-ms-reveal, 
+        input[type="password"]::-ms-clear { 
+            display: none !important; 
+        }
+    `]
 })
 export class LoginUserNutriComponent implements OnInit {
     private fb = inject(FormBuilder);
@@ -48,7 +54,7 @@ export class LoginUserNutriComponent implements OnInit {
 
     efetuarLogin() {
         if (this.loginForm.invalid) {
-            alert('Por favor, preencha os campos corretamente.');
+            this.loginForm.markAllAsTouched();
             return;
         }
 
@@ -85,5 +91,10 @@ export class LoginUserNutriComponent implements OnInit {
 
     togglePassword() {
         this.showPasswordToggle = !this.showPasswordToggle;
+    }
+
+    isInvalid(campo: string): boolean {
+        const control = this.loginForm.get(campo);
+        return control ? control.invalid && (control.touched || control.dirty) : false;
     }
 }
