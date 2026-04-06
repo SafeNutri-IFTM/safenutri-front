@@ -54,7 +54,7 @@ export class CadastroRestricaoUserComponent implements OnInit {
     }
 
     voltar(): void {
-        this.router.navigate(['/']);
+        this.router.navigate(['/user/feed']);
     }
 
     save(): void {

@@ -101,7 +101,7 @@ export class CadastroReceitaUserComponent implements OnInit {
   // ==========================================
 
   voltar(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/user/feed']);
   }
 
   isInvalid(campo: string): boolean {
