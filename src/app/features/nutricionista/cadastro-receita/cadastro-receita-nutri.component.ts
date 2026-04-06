@@ -109,7 +109,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
   }
 
   voltar(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/nutri/feed']);
   }
 
   isInvalid(campo: string): boolean {

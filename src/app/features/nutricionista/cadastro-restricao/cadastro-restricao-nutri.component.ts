@@ -54,7 +54,7 @@ export class CadastroRestricaoNutriComponent implements OnInit {
     }
 
     voltar(): void {
-        this.router.navigate(['/']);
+        this.router.navigate(['/nutri/feed']);
     }
 
     save(): void {
