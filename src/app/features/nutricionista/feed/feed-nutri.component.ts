@@ -13,4 +13,4 @@ import { NavbarFeedComponent } from "../../../components/navbar-feed/navbar-feed
     templateUrl: './feed-nutri.component.html',
     styles: []
 })
-export class FeedUserComponent {}
+export class FeedNutriComponent {}
