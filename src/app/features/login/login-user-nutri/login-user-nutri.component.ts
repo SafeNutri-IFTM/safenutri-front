@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { RouterModule, Router } from '@angular/router';
 
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
@@ -20,7 +19,6 @@ import { NotifierService } from '../../../services/notifier.service';
         CommonModule,
         ReactiveFormsModule,
         FormsModule,
-        MatIconModule,
         RouterModule,
         FooterComponent,
         ButtonPrimaryComponent,
