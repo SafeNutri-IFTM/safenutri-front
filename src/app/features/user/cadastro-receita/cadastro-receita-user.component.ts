@@ -31,8 +31,8 @@ import { finalize } from 'rxjs';
     SpinnerComponent,
     FormsModule
   ],
-  templateUrl: './cadastro-receita.component.html',
-  styleUrl: './cadastro-receita.component.css',
+  templateUrl: './cadastro-receita-user.component.html',
+  styleUrl: './cadastro-receita-user.component.css',
   styles: [`
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
