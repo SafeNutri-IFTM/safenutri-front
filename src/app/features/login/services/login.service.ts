@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { environment } from '../../../../environments/environment'; // Ajuste o caminho se necessário
+import { environment } from '../../../../environments/environment';
 import { Claims } from '../../../interfaces/dto/claims';
 import { LoginInput } from '../../../interfaces/input/loginInput';
 import { Token } from '../../../interfaces/dto/token';
@@ -13,7 +13,6 @@ import { Token } from '../../../interfaces/dto/token';
     providedIn: 'root',
 })
 export class LoginService {
-    // Injeção moderna
     private http = inject(HttpClient);
     private router = inject(Router);
 
@@ -25,11 +24,11 @@ export class LoginService {
     }
 
     obterToken(): string | null {
-        return localStorage.getItem('token');
+        return sessionStorage.getItem('token');
     }
 
     salvarToken(token: string) {
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('token', token);
     }
 
     obterClaimsJwt(): Claims | null {
@@ -39,7 +38,6 @@ export class LoginService {
             return null;
         }
 
-        // Retorna do cache se o token for o mesmo
         if (this.cachedClaims && this.cachedToken === token) {
             return this.cachedClaims;
         }
@@ -56,27 +54,45 @@ export class LoginService {
     }
 
     verificarTokenNoServidor(): Observable<boolean> {
-        // 💡 Note que tirei os "headers" manuais daqui! O Interceptor vai cuidar disso.
         return this.http.post<boolean>(`${environment.api}/auth/verify-token`, {});
     }
 
     isLogin(): boolean {
-        return this.obterToken() !== null;
+        const token = this.obterToken();
+
+        if (!token || token === 'null' || token === 'undefined') {
+            return false;
+        }
+
+        try {
+            const claims = jwtDecode<Claims>(token);
+
+            if (claims.exp && (claims.exp * 1000 < Date.now())) {
+                console.warn('Token expirado. Limpando sessão...');
+                this.logout();
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Token inválido ou corrompido.', error);
+            this.logout();
+            return false;
+        }
     }
 
     logout() {
         this.limparCache();
-        localStorage.clear(); // Limpa tudo do storage
 
-        // Opcional: Limpar caches do navegador (mantive do seu código antigo)
+        sessionStorage.clear();
+
         if ('caches' in window) {
             caches.keys().then((names) => {
                 names.forEach((name) => caches.delete(name));
             });
         }
 
-        // 💡 Forma moderna do Angular de redirecionar sem recarregar a página inteira:
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/user/login']);
     }
 
     private limparCache() {
