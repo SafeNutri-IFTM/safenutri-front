@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
     providedIn: 'root'
 })
 export class DocumentosLegaisService {
-    private UrlDocumentos = `${environment.api}/public/documentos-legais`;
+    private UrlDocumentos = `${environment.api}/documentos-legais`;
 
     constructor(private http: HttpClient) { }
 
