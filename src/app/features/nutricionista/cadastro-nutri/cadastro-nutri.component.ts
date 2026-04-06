@@ -165,7 +165,7 @@ export class CadastroNutriComponent implements OnInit {
                 .subscribe({
                     next: () => {
                         this.notifier.showSuccess("Nutricionista cadastrado com sucesso!");
-                        this.router.navigate(['/login']);
+                        this.router.navigate(['/user/login']);
                     },
                     error: (erro) => {
                         console.error('Erro ao cadastrar nutricionista', erro);

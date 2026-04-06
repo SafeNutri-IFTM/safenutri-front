@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { RestricaoAlimentarComponent } from '../../../components/restricao-alimentar/restricao-alimentar.component';
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
+import { ButtonSecundaryComponent } from '../../../components/button-secundary/button-secundary.component';
 
 @Component({
   selector: 'app-cadastro-receita',
@@ -16,7 +18,9 @@ import { RestricaoAlimentarComponent } from '../../../components/restricao-alime
     ReactiveFormsModule, 
     NavbarLoginComponent, 
     FooterComponent, 
-    RestricaoAlimentarComponent
+    RestricaoAlimentarComponent,
+    ButtonPrimaryComponent,
+    ButtonSecundaryComponent
   ],
   templateUrl: './cadastro-receita.component.html',
   styleUrl: './cadastro-receita.component.css',

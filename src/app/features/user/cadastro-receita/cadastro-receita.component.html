@@ -7,13 +7,16 @@
     <h2 class="text-2xl md:text-3xl font-medium text-center text-[#2A2B3D] mb-10">Cadastro de Receita</h2>
 
     <form [formGroup]="receitaForm" (ngSubmit)="salvar()" class="w-full">
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-        
+
         <div class="col-span-1 aspect-square relative group">
-          <div class="absolute inset-0 z-10 bg-[#EAEAEA] rounded-xl flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 p-6 text-center shadow-md group-hover:bg-gray-300 group-hover:shadow-lg transition-all duration-300">
-            <svg class="w-14 h-14 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+          <div
+            class="absolute inset-0 z-10 bg-[#EAEAEA] rounded-xl flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 p-6 text-center shadow-md group-hover:bg-gray-300 group-hover:shadow-lg transition-all duration-300">
+            <svg class="w-14 h-14 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              stroke-width="1">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
             </svg>
             <span class="text-base font-semibold text-gray-800 leading-tight">Arraste e solte uma imagem</span>
             <span class="text-base font-semibold text-gray-800 leading-tight mb-1">ou navegue</span>
@@ -25,18 +28,22 @@
           <div>
             <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Título da Receita</h3>
             <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg"
-                 [ngClass]="isInvalid('titulo') ? 'border-red-500' : 'border-black'">
-              <input type="text" formControlName="titulo" id="titulo_receita" placeholder=" " class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
-              <label for="titulo_receita" class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">Título</label>
+              [ngClass]="isInvalid('titulo') ? 'border-red-500' : 'border-black'">
+              <input type="text" formControlName="titulo" id="titulo_receita" placeholder=" "
+                class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
+              <label for="titulo_receita"
+                class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">Título</label>
             </div>
             <div *ngIf="isInvalid('titulo')" class="text-red-500 text-xs mt-1 ml-1">O título é obrigatório.</div>
           </div>
 
           <div class="flex flex-col flex-grow">
             <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Descrição da Receita</h3>
-            <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg flex-grow flex"
-                 [ngClass]="isInvalid('descricao') ? 'border-red-500' : 'border-black'">
-              <textarea formControlName="descricao" placeholder="Descrição..." class="w-full bg-transparent border-none pt-3 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none resize-none flex-grow"></textarea>
+            <div
+              class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg flex-grow flex"
+              [ngClass]="isInvalid('descricao') ? 'border-red-500' : 'border-black'">
+              <textarea formControlName="descricao" placeholder="Descrição..."
+                class="w-full bg-transparent border-none pt-3 pb-2 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none resize-none flex-grow"></textarea>
             </div>
             <div *ngIf="isInvalid('descricao')" class="text-red-500 text-xs mt-1 ml-1">A descrição é obrigatória.</div>
           </div>
@@ -44,33 +51,37 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-        
+
         <div class="col-span-1 flex flex-col relative">
           <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Tipo de Receita</h3>
-          
+
           <div class="relative bg-[#F8F9FA] border-b-2 transition-colors rounded-t-lg z-40"
-               [ngClass]="isInvalid('tipoReceita') ? 'border-red-500' : (dropdownTipo ? 'border-[#FFC605]' : 'border-black')">
-            
-            <div (click)="toggleDropdownTipo($event)" class="flex items-center justify-between px-3 py-3 cursor-pointer">
+            [ngClass]="isInvalid('tipoReceita') ? 'border-red-500' : (dropdownTipo ? 'border-[#FFC605]' : 'border-black')">
+
+            <div (click)="toggleDropdownTipo($event)"
+              class="flex items-center justify-between px-3 py-3 cursor-pointer">
               <div class="flex items-center gap-2 w-full">
-                <span class="text-sm font-normal" [ngClass]="receitaForm.get('tipoReceita')?.value ? 'text-black' : 'text-gray-500'">
+                <span class="text-sm font-normal"
+                  [ngClass]="receitaForm.get('tipoReceita')?.value ? 'text-black' : 'text-gray-500'">
                   {{ labelTipo }}
                 </span>
               </div>
-              <svg class="w-4 h-4 text-gray-500 transition-transform duration-200" [class.rotate-180]="dropdownTipo" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <svg class="w-4 h-4 text-gray-500 transition-transform duration-200" [class.rotate-180]="dropdownTipo"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
-            
-            <div *ngIf="dropdownTipo" class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden z-50">
+
+            <div *ngIf="dropdownTipo"
+              class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden z-50">
               <ul class="max-h-48 overflow-y-auto">
                 <li *ngFor="let op of opcoesTipo" (click)="selecionarOpcaoTipo(op.value, $event)"
-                    class="px-4 py-3 text-sm text-black hover:bg-[#FFC605] cursor-pointer transition-colors border-b border-gray-50 last:border-0">
+                  class="px-4 py-3 text-sm text-black hover:bg-[#FFC605] cursor-pointer transition-colors border-b border-gray-50 last:border-0">
                   {{ op.label }}
                 </li>
               </ul>
             </div>
-            
+
           </div>
           <div *ngIf="isInvalid('tipoReceita')" class="text-red-500 text-xs mt-1 ml-1">O tipo é obrigatório.</div>
         </div>
@@ -78,11 +89,13 @@
         <div class="col-span-1 flex flex-col">
           <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Quantidade de Porções</h3>
           <div class="flex items-start gap-2">
-            <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg flex-grow flex"
-                 [ngClass]="isInvalid('porcoes') ? 'border-red-500' : 'border-black'">
-              
+            <div
+              class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg flex-grow flex"
+              [ngClass]="isInvalid('porcoes') ? 'border-red-500' : 'border-black'">
+
               <div class="bg-[#EAEAEA] px-3 flex items-center justify-center rounded-tl-lg border-r border-gray-200">
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M7.5 7.5v3.5a1.5 1.5 0 0 0 3 0v-3.5" />
                   <path d="M9 7.5v3.5" />
@@ -92,11 +105,14 @@
                 </svg>
               </div>
 
-              <input type="number" formControlName="porcoes" placeholder="Ex: 4 porções" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
+              <input type="number" formControlName="porcoes" placeholder="Ex: 4 porções"
+                class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none">
             </div>
             <div class="flex flex-col justify-center gap-1 h-[45px]">
-              <button type="button" (click)="incrementarPorcao()" class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-sm transition-colors hover:bg-gray-300 pb-[2px] leading-none cursor-pointer">+</button>
-              <button type="button" (click)="decrementarPorcao()" class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-lg transition-colors hover:bg-gray-300 pb-[3px] leading-none cursor-pointer">-</button>
+              <button type="button" (click)="incrementarPorcao()"
+                class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-sm transition-colors hover:bg-gray-300 pb-[2px] leading-none cursor-pointer">+</button>
+              <button type="button" (click)="decrementarPorcao()"
+                class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-lg transition-colors hover:bg-gray-300 pb-[3px] leading-none cursor-pointer">-</button>
             </div>
           </div>
           <div *ngIf="isInvalid('porcoes')" class="text-red-500 text-xs mt-1 ml-1">A quantidade é obrigatória.</div>
@@ -104,13 +120,18 @@
 
         <div class="col-span-1 flex flex-col">
           <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Tempo de Preparo (hh:mm)</h3>
-          
-          <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg flex"
-               [ngClass]="isInvalid('tempoPreparo') ? 'border-red-500' : 'border-black'">
-             <div class="bg-[#EAEAEA] px-3 flex items-center justify-center rounded-tl-lg border-r border-gray-200">
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-             </div>
-            <input type="time" formControlName="tempoPreparo" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none cursor-text [&::-webkit-calendar-picker-indicator]:cursor-pointer">
+
+          <div
+            class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t-lg flex"
+            [ngClass]="isInvalid('tempoPreparo') ? 'border-red-500' : 'border-black'">
+            <div class="bg-[#EAEAEA] px-3 flex items-center justify-center rounded-tl-lg border-r border-gray-200">
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <input type="time" formControlName="tempoPreparo"
+              class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none cursor-text [&::-webkit-calendar-picker-indicator]:cursor-pointer">
           </div>
           <div *ngIf="isInvalid('tempoPreparo')" class="text-red-500 text-xs mt-1 ml-1">O tempo é obrigatório.</div>
         </div>
@@ -119,89 +140,116 @@
 
       <div class="relative w-full mt-10 pt-2">
         <div class="hidden lg:flex absolute top-0 right-0 w-[40%] justify-end pointer-events-none z-0">
-          <img src="assets/ilustracaoReceita.png" alt="Ilustração de Ingredientes" class="w-full max-w-[340px] object-contain opacity-95">
+          <img src="assets/ilustracaoReceita.png" alt="Ilustração de Ingredientes"
+            class="w-full max-w-[340px] object-contain opacity-95">
         </div>
 
         <div class="w-full lg:w-[58%] relative z-10">
           <h3 class="text-[17px] font-semibold text-[#4A4B5D] mb-4">Ingredientes da Receita</h3>
-          
+
           <div formArrayName="ingredientes">
             <div *ngFor="let ingrediente of ingredientes.controls; let i = index" [formGroupName]="i" class="mb-3">
-              
+
               <div class="flex items-start gap-2">
-                
+
                 <div class="flex flex-col flex-grow">
-                  <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
-                       [ngClass]="isFieldInvalidInArray('ingredientes', i, 'nome') ? 'border-red-500' : 'border-black'">
-                    <input type="text" formControlName="nome" placeholder="Obs: Colocar nome do ingrediente" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
+                  <div
+                    class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
+                    [ngClass]="isFieldInvalidInArray('ingredientes', i, 'nome') ? 'border-red-500' : 'border-black'">
+                    <input type="text" formControlName="nome" placeholder="Obs: Colocar nome do ingrediente"
+                      class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
                   </div>
-                  <span *ngIf="isFieldInvalidInArray('ingredientes', i, 'nome')" class="text-red-500 text-[11px] mt-1 ml-1 leading-tight">Obrigatório</span>
+                  <span *ngIf="isFieldInvalidInArray('ingredientes', i, 'nome')"
+                    class="text-red-500 text-[11px] mt-1 ml-1 leading-tight">Obrigatório</span>
                 </div>
-                
+
                 <div class="flex flex-col w-[85px]">
-                  <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
-                       [ngClass]="isFieldInvalidInArray('ingredientes', i, 'unidade') ? 'border-red-500' : 'border-black'">
-                    <input type="text" formControlName="unidade" placeholder="Unidade" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] text-center font-normal outline-none">
+                  <div
+                    class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
+                    [ngClass]="isFieldInvalidInArray('ingredientes', i, 'unidade') ? 'border-red-500' : 'border-black'">
+                    <input type="text" formControlName="unidade" placeholder="Unidade"
+                      class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] text-center font-normal outline-none">
                   </div>
-                  <span *ngIf="isFieldInvalidInArray('ingredientes', i, 'unidade')" class="text-red-500 text-[11px] mt-1 ml-1 leading-tight">Obrigatório</span>
+                  <span *ngIf="isFieldInvalidInArray('ingredientes', i, 'unidade')"
+                    class="text-red-500 text-[11px] mt-1 ml-1 leading-tight">Obrigatório</span>
                 </div>
-                
+
                 <div class="flex flex-col w-[70px]">
-                  <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
-                       [ngClass]="isFieldInvalidInArray('ingredientes', i, 'quantidade') ? 'border-red-500' : 'border-black'">
-                    <input type="number" formControlName="quantidade" placeholder="Qntd" class="w-full bg-transparent border-none py-3 px-2 focus:ring-0 text-gray-700 text-[13px] text-center font-normal outline-none">
+                  <div
+                    class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
+                    [ngClass]="isFieldInvalidInArray('ingredientes', i, 'quantidade') ? 'border-red-500' : 'border-black'">
+                    <input type="number" formControlName="quantidade" placeholder="Qntd"
+                      class="w-full bg-transparent border-none py-3 px-2 focus:ring-0 text-gray-700 text-[13px] text-center font-normal outline-none">
                   </div>
-                  <span *ngIf="isFieldInvalidInArray('ingredientes', i, 'quantidade')" class="text-red-500 text-[11px] mt-1 ml-1 leading-tight">Obrigatório</span>
+                  <span *ngIf="isFieldInvalidInArray('ingredientes', i, 'quantidade')"
+                    class="text-red-500 text-[11px] mt-1 ml-1 leading-tight">Obrigatório</span>
                 </div>
-                
+
                 <div class="flex flex-col justify-center gap-1 ml-1 h-[45px]">
-                  <button type="button" (click)="incrementarQuantidade(i)" class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-sm transition-colors hover:bg-gray-300 pb-[2px] leading-none cursor-pointer">+</button>
-                  <button type="button" (click)="decrementarQuantidade(i)" class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-lg transition-colors hover:bg-gray-300 pb-[3px] leading-none cursor-pointer">-</button>
+                  <button type="button" (click)="incrementarQuantidade(i)"
+                    class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-sm transition-colors hover:bg-gray-300 pb-[2px] leading-none cursor-pointer">+</button>
+                  <button type="button" (click)="decrementarQuantidade(i)"
+                    class="bg-[#EAEAEA] text-gray-500 rounded-full w-[22px] h-[22px] flex items-center justify-center text-lg transition-colors hover:bg-gray-300 pb-[3px] leading-none cursor-pointer">-</button>
                 </div>
               </div>
-              
+
               <div class="flex justify-end mt-1" *ngIf="ingredientes.length > 1">
-                <button type="button" (click)="removerIngrediente(i)" class="text-[11px] text-red-400 hover:text-red-600 font-medium cursor-pointer">Remover ingrediente</button>
+                <button type="button" (click)="removerIngrediente(i)"
+                  class="text-[11px] text-red-400 hover:text-red-600 font-medium cursor-pointer">Remover
+                  ingrediente</button>
               </div>
             </div>
           </div>
-          <button type="button" (click)="adicionarIngrediente()" class="text-[12px] text-gray-500 hover:text-[#FFC605] transition-colors ml-1 mt-1 cursor-pointer">Adicionar mais um ingrediente...</button>
+          <button type="button" (click)="adicionarIngrediente()"
+            class="text-[12px] text-gray-500 hover:text-[#FFC605] transition-colors ml-1 mt-1 cursor-pointer">Adicionar
+            mais um ingrediente...</button>
         </div>
 
         <div class="w-full mt-8 relative z-10">
           <h3 class="text-[17px] font-semibold text-[#4A4B5D] mb-4">Modo de preparo da Receita</h3>
-          
+
           <div formArrayName="passos">
             <div *ngFor="let passo of passos.controls; let i = index" [formGroupName]="i" class="mb-5">
-              
+
               <div class="flex justify-between items-center mb-2 w-full lg:w-[58%]">
                 <h4 class="text-[15px] font-bold text-[#4A4B5D]">• Passo {{ i + 1 }}</h4>
-                <button type="button" *ngIf="passos.length > 1" (click)="removerPasso(i)" class="text-xs text-red-400 hover:text-red-600 font-medium cursor-pointer">Remover passo</button>
+                <button type="button" *ngIf="passos.length > 1" (click)="removerPasso(i)"
+                  class="text-xs text-red-400 hover:text-red-600 font-medium cursor-pointer">Remover passo</button>
               </div>
-              
+
               <div class="flex flex-col mb-4 w-full lg:w-[58%]">
-                <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t w-full"
-                     [ngClass]="isFieldInvalidInArray('passos', i, 'tituloEtapa') ? 'border-red-500' : 'border-black'">
-                  <input type="text" formControlName="tituloEtapa" placeholder="Titulo da Etapa" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
+                <div
+                  class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t w-full"
+                  [ngClass]="isFieldInvalidInArray('passos', i, 'tituloEtapa') ? 'border-red-500' : 'border-black'">
+                  <input type="text" formControlName="tituloEtapa" placeholder="Titulo da Etapa"
+                    class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
                 </div>
-                <div *ngIf="isFieldInvalidInArray('passos', i, 'tituloEtapa')" class="text-red-500 text-xs mt-1 ml-1">O título da etapa é obrigatório.</div>
+                <div *ngIf="isFieldInvalidInArray('passos', i, 'tituloEtapa')" class="text-red-500 text-xs mt-1 ml-1">O
+                  título da etapa é obrigatório.</div>
               </div>
-              
+
               <div class="flex flex-col w-full">
-                <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t w-full"
-                     [ngClass]="isFieldInvalidInArray('passos', i, 'descricaoEtapa') ? 'border-red-500' : 'border-black'">
-                  <textarea formControlName="descricaoEtapa" placeholder="Obs: Use frases curtas, numeradas (1., 2., 3...) e com detalhes de tempo e temperatura." class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none h-[140px] resize-none leading-relaxed"></textarea>
+                <div
+                  class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t w-full"
+                  [ngClass]="isFieldInvalidInArray('passos', i, 'descricaoEtapa') ? 'border-red-500' : 'border-black'">
+                  <textarea formControlName="descricaoEtapa"
+                    placeholder="Obs: Use frases curtas, numeradas (1., 2., 3...) e com detalhes de tempo e temperatura."
+                    class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none h-[140px] resize-none leading-relaxed"></textarea>
                 </div>
-                <div *ngIf="isFieldInvalidInArray('passos', i, 'descricaoEtapa')" class="text-red-500 text-xs mt-1 ml-1">A descrição da etapa é obrigatória.</div>
+                <div *ngIf="isFieldInvalidInArray('passos', i, 'descricaoEtapa')"
+                  class="text-red-500 text-xs mt-1 ml-1">A descrição da etapa é obrigatória.</div>
               </div>
             </div>
           </div>
-          <button type="button" (click)="adicionarPasso()" class="text-[12px] text-gray-500 hover:text-[#FFC605] transition-colors ml-1 mt-1 cursor-pointer">Adicionar mais um passo...</button>
+          <button type="button" (click)="adicionarPasso()"
+            class="text-[12px] text-gray-500 hover:text-[#FFC605] transition-colors ml-1 mt-1 cursor-pointer">Adicionar
+            mais um passo...</button>
         </div>
 
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-gray-100 mt-10 relative z-40 bg-white items-start">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-gray-100 mt-10 relative z-40 bg-white items-start">
         <div class="w-full relative">
           <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Restrições</h3>
           <app-restricao-alimentar [control]="receitaForm.get('restricao')"></app-restricao-alimentar>
@@ -210,24 +258,30 @@
         <div>
           <h3 class="text-[15px] font-semibold text-[#4A4B5D] mb-2">Total de Calorias da Receita (kcal)</h3>
           <div class="relative bg-[#F8F9FA] border-b-2 focus-within:!border-[#FFC605] transition-colors rounded-t"
-               [ngClass]="isInvalid('calorias') ? 'border-red-500' : 'border-black'">
-            <input type="number" formControlName="calorias" placeholder="Obs: colocar quantidade aproximada" class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
+            [ngClass]="isInvalid('calorias') ? 'border-red-500' : 'border-black'">
+            <input type="number" formControlName="calorias" placeholder="Obs: colocar quantidade aproximada"
+              class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-[13px] font-normal outline-none">
           </div>
-          <div *ngIf="isInvalid('calorias')" class="text-red-500 text-xs mt-1 ml-1">A caloria aproximada é obrigatória.</div>
+          <div *ngIf="isInvalid('calorias')" class="text-red-500 text-xs mt-1 ml-1">A caloria aproximada é obrigatória.
+          </div>
         </div>
       </div>
 
       <div class="flex flex-col items-center gap-3 pt-6 w-full max-w-[280px] mx-auto mt-10 relative z-10">
-        
-        <div class="w-full transition-opacity duration-300" [ngClass]="{'opacity-50 pointer-events-none': receitaForm.invalid}">
-          <button type="submit" [disabled]="receitaForm.invalid" class="w-full bg-[#FFC605] text-black font-semibold py-3 rounded-[2rem] shadow-[0_4px_10px_rgba(255,198,5,0.3)] hover:bg-[#e6b305] transition-colors text-sm cursor-pointer">
-            Cadastrar
-          </button>
+        <div class="flex flex-col gap-4 pt-6 w-full mt-4">
+
+          <div class="w-full" [ngClass]="{'opacity-50 pointer-events-none': receitaForm.invalid}">
+
+            <app-button-primary value="Cadastrar"></app-button-primary>
+          </div>
+
+          <div class="w-full">
+            <app-button-secundary (click)="voltar()" value="Voltar">
+            </app-button-secundary>
+          </div>
+
         </div>
 
-        <button type="button" (click)="voltar()" class="w-full bg-white text-[#FFC605] border-2 border-[#FFC605] font-semibold py-[10px] rounded-[2rem] hover:bg-gray-50 transition-colors text-sm cursor-pointer">
-          Voltar
-        </button>
       </div>
 
     </form>
