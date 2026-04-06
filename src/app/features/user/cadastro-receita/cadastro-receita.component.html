@@ -6,13 +6,16 @@
   <main class="flex-grow container mx-auto px-4 py-10 max-w-5xl">
     <h2 class="text-2xl md:text-3xl font-medium text-center text-[#2A2B3D] mb-10">Cadastro de Receita</h2>
 
-    <form [formGroup]="receitaForm" (ngSubmit)="salvar()" class="w-full">
+    <form [formGroup]="receitaForm" (ngSubmit)="save()" class="w-full">
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-
         <div class="col-span-1 aspect-square relative group">
-          <div
-            class="absolute inset-0 z-10 bg-[#EAEAEA] rounded-xl flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 p-6 text-center shadow-md group-hover:bg-gray-300 group-hover:shadow-lg transition-all duration-300">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" id="fileInput"
+              #fileInput 
+            />
+          <div *ngIf="!imagePreview"
+            class="absolute inset-0 z-10 bg-[#EAEAEA] rounded-xl flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 p-6 text-center shadow-md group-hover:bg-gray-300 group-hover:shadow-lg transition-all duration-300"
+            (click)="fileInput.click()">
             <svg class="w-14 h-14 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
               stroke-width="1">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -21,6 +24,10 @@
             <span class="text-base font-semibold text-gray-800 leading-tight">Arraste e solte uma imagem</span>
             <span class="text-base font-semibold text-gray-800 leading-tight mb-1">ou navegue</span>
             <span class="text-xs text-gray-600 mt-2">Formatos aceitos: JPG, PNG (máx 5mb)</span>
+          </div>
+
+          <div *ngIf="imagePreview" class="absolute inset-0 z-20">
+            <img [src]="imagePreview" alt="Preview" class="w-full h-full object-cover rounded-xl" />
           </div>
         </div>
 
@@ -130,8 +137,8 @@
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <input type="time" formControlName="tempoPreparo"
-              class="w-full bg-transparent border-none py-3 px-3 focus:ring-0 text-gray-700 text-sm font-normal outline-none cursor-text [&::-webkit-calendar-picker-indicator]:cursor-pointer">
+            
+            <input type="text" placeholder="00:00" formControlName="tempoPreparo" maxlength="5">
           </div>
           <div *ngIf="isInvalid('tempoPreparo')" class="text-red-500 text-xs mt-1 ml-1">O tempo é obrigatório.</div>
         </div>
@@ -271,7 +278,6 @@
         <div class="flex flex-col gap-4 pt-6 w-full mt-4">
 
           <div class="w-full" [ngClass]="{'opacity-50 pointer-events-none': receitaForm.invalid}">
-
             <app-button-primary value="Cadastrar"></app-button-primary>
           </div>
 
@@ -287,5 +293,6 @@
     </form>
   </main>
 
+  <app-spinner></app-spinner>
   <app-footer></app-footer>
 </div>

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router'; 
+import imageCompression from 'browser-image-compression';
 
 // Componentes
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
@@ -9,6 +11,12 @@ import { FooterComponent } from '../../../components/footer/footer.component';
 import { RestricaoAlimentarComponent } from '../../../components/restricao-alimentar/restricao-alimentar.component';
 import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
 import { ButtonSecundaryComponent } from '../../../components/button-secundary/button-secundary.component';
+import { NotifierService } from '../../../services/notifier.service';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { ReceitaInput } from '../../../interfaces/input/receitaInput';
+import { LoadingService } from '../../../services/loading.service';
+import { UserService } from '../services/user.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro-receita',
@@ -20,7 +28,9 @@ import { ButtonSecundaryComponent } from '../../../components/button-secundary/b
     FooterComponent, 
     RestricaoAlimentarComponent,
     ButtonPrimaryComponent,
-    ButtonSecundaryComponent
+    ButtonSecundaryComponent,
+    SpinnerComponent,
+    FormsModule
   ],
   templateUrl: './cadastro-receita.component.html',
   styleUrl: './cadastro-receita.component.css',
@@ -50,7 +60,18 @@ export class CadastroReceitaComponent implements OnInit {
     { label: 'Bebida', value: 'BEBIDA' }
   ];
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  selectedFile: File | null = null;
+  imagePreview!: string | null;
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private notifier: NotifierService,
+    private loadingService: LoadingService,
+    private userService: UserService,
+  ) {}
 
   ngOnInit(): void {
     this.receitaForm = this.fb.group({
@@ -215,6 +236,115 @@ export class CadastroReceitaComponent implements OnInit {
   removerPasso(index: number): void {
     if (this.passos.length > 1) {
       this.passos.removeAt(index);
+    }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      // Validar tipo de arquivo
+      const validTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+      ];
+      if (!validTypes.includes(file.type)) {
+        this.notifier.showWarning(
+          'Formato de imagem não suportado. Use JPG, PNG, GIF ou WEBP.',
+        );
+        return;
+      }
+
+      // Validar tamanho (máximo 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        this.notifier.showWarning('Imagem muito grande. Tamanho máximo: 5MB');
+        return;
+      }
+
+      this.selectedFile = file;
+      this.receitaForm.patchValue({ imagem: file.name });
+      this.receitaForm.get('imagem')?.updateValueAndValidity();
+
+      // Preview da imagem
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  changeImage() {
+    this.removeImage();
+    this.fileInput.nativeElement.value = '';
+    this.fileInput.nativeElement.click();
+  }
+
+  removeImage() {
+    this.selectedFile = null;
+    this.imagePreview = null;
+    this.receitaForm.get('imagem')?.updateValueAndValidity();
+  }
+
+  async redimensionarImagem(): Promise<File | null> {
+    if (!this.selectedFile) {
+      this.notifier.showWarning('Selecione uma imagem antes de enviar.');
+      return null;
+    }
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+      initialQuality: 0.8,
+    };
+
+    const file = this.selectedFile;
+    const compressedFile = await imageCompression(file, options);
+
+    return compressedFile;
+  }
+
+  save(): void {
+    if (this.receitaForm.valid) {
+      const formValues = this.receitaForm.value;
+
+      const formData = new FormData();
+      const imagemCompressed = this.redimensionarImagem()
+
+      formData.append("tipoReceitaId", formValues.tipoReceita,)
+      formData.append("titulo", formValues.titulo,)
+      formData.append("descricao", formValues.descricao,)
+      formData.append("tempoPreparo", formValues.tempoPreparo,)
+      formData.append("porcao", formValues.porcao,)
+      formData.append("calorias", formValues.calorias,)
+      formData.append("imagem", imagemCompressed.toString())
+      formData.append("restricoes", formValues.restricoes,)
+
+      this.loadingService.show();
+
+      this.userService.createReceita(formData)
+        .pipe(finalize(() => this.loadingService.hide()))
+        .subscribe({
+          next: (resposta) => {
+            this.notifier.showSuccess("Usuário cadastrado com sucesso!");
+            this.router.navigate(['/user/login']);
+          },
+          error: (erro) => {
+            console.error('Erro ao cadastrar usuário', erro);
+      
+            const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar usuário. Verifique os dados.";
+      
+            this.notifier.showError(mensagemBackend);
+          }
+        });
+
+    } else {
+      this.receitaForm.markAllAsTouched();
     }
   }
 }
