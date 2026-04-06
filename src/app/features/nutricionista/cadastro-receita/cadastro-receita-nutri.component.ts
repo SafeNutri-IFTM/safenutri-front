@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import imageCompression from 'browser-image-compression';
 
 // Componentes
@@ -21,10 +21,10 @@ import { NutricionistaService } from '../services/nutri.service';
   selector: 'app-cadastro-receita',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    NavbarLoginComponent, 
-    FooterComponent, 
+    CommonModule,
+    ReactiveFormsModule,
+    NavbarLoginComponent,
+    FooterComponent,
     RestricaoAlimentarComponent,
     ButtonPrimaryComponent,
     ButtonSecundaryComponent,
@@ -45,7 +45,7 @@ import { NutricionistaService } from '../services/nutri.service';
   `]
 })
 export class CadastroReceitaNutriComponent implements OnInit {
-  
+
   // === VARIÁVEIS GERAIS ===
   receitaForm!: FormGroup;
 
@@ -59,12 +59,12 @@ export class CadastroReceitaNutriComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
-    private fb: FormBuilder, 
-    private router: Router, 
+    private fb: FormBuilder,
+    private router: Router,
     private notifier: NotifierService,
     private loadingService: LoadingService,
     private nutriService: NutricionistaService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.receitaForm = this.fb.group({
@@ -72,7 +72,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
       descricao: ['', Validators.required],
       tipoReceita: ['', Validators.required],
       porcoes: ['', [Validators.required, Validators.min(1)]],
-      tempoPreparo: ['', Validators.required],     
+      tempoPreparo: ['', Validators.required],
       restricao: [[]],
       calorias: ['', Validators.required],
       ingredientes: this.fb.array([this.criarIngrediente()]),
@@ -82,19 +82,19 @@ export class CadastroReceitaNutriComponent implements OnInit {
     this.buscarOpcoes();
   }
 
-    buscarOpcoes(): void {
-      this.nutriService.getTipoReceita().subscribe({
-        next: (res: any) => {
-          this.opcoesTipo = res.map((r: any) => ({
-              label: r.tipoReceita,
-              value: r.id
-          }));
-        },
-        error: (err) => {
-          console.error('Erro ao carregar tipo de Receita', err);
-        }
-      });
-    }
+  buscarOpcoes(): void {
+    this.nutriService.getTipoReceita().subscribe({
+      next: (res: any) => {
+        this.opcoesTipo = res.map((r: any) => ({
+          label: r.tipoReceita,
+          value: r.id
+        }));
+      },
+      error: (err) => {
+        console.error('Erro ao carregar tipo de Receita', err);
+      }
+    });
+  }
 
   // ==========================================
   //      MÉTODOS DE CONTROLE DO FORMULÁRIO
@@ -109,7 +109,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
   }
 
   voltar(): void {
-    this.router.navigate(['/']); 
+    this.router.navigate(['/']);
   }
 
   isInvalid(campo: string): boolean {
@@ -157,7 +157,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
     const controle = this.receitaForm.get('porcoes');
     const valorAtual = Number(controle?.value) || 0;
     controle?.setValue(valorAtual + 1);
-    
+
     // Força a validação visual
     controle?.markAsTouched();
     controle?.markAsDirty();
@@ -169,7 +169,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
     if (valorAtual > 0) {
       controle?.setValue(valorAtual - 1);
     }
-    
+
     // Força a validação visual
     controle?.markAsTouched();
     controle?.markAsDirty();
@@ -205,7 +205,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
     const controle = this.ingredientes.at(index).get('quantidade');
     const valorAtual = Number(controle?.value) || 0;
     controle?.setValue(valorAtual + 1);
-    
+
     // Força a validação visual
     controle?.markAsTouched();
     controle?.markAsDirty();
@@ -217,7 +217,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
     if (valorAtual > 0) {
       controle?.setValue(valorAtual - 1);
     }
-    
+
     // Força a validação visual
     controle?.markAsTouched();
     controle?.markAsDirty();
@@ -274,15 +274,27 @@ export class CadastroReceitaNutriComponent implements OnInit {
         return;
       }
 
+      // === ATIVA O LOADING AQUI ===
+      this.loadingService.show();
+
       this.selectedFile = file;
       this.receitaForm.patchValue({ imagem: file.name });
       this.receitaForm.get('imagem')?.updateValueAndValidity();
 
       // Preview da imagem
       const reader = new FileReader();
+
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
+        this.loadingService.hide();
       };
+
+      // Adiciona um tratamento de erro só para garantir que o loading não fique travado na tela
+      reader.onerror = () => {
+        this.loadingService.hide();
+        this.notifier.showError("Erro ao carregar a pré-visualização da imagem.");
+      };
+
       reader.readAsDataURL(file);
     }
   }
@@ -316,7 +328,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
       const file = this.selectedFile;
       const compressedFile = await imageCompression(file, options);
       return compressedFile;
-    
+
     } catch (error) {
       this.notifier.showError("Erro ao processar a imagem. Tente outro arquivo.");
       return null;
@@ -333,7 +345,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
         titulo: formValues.titulo,
         descricao: formValues.descricao,
         tempoPreparo: formValues.tempoPreparo,
-        porcao : formValues.porcoes, 
+        porcao: formValues.porcoes,
         calorias: formValues.calorias,
         restricoes: formValues.restricao || [],
         ingredientes: formValues.ingredientes,
@@ -356,13 +368,13 @@ export class CadastroReceitaNutriComponent implements OnInit {
         .subscribe({
           next: (resposta) => {
             this.notifier.showSuccess("Receita cadastrada com sucesso!");
-            this.router.navigate(['/user/feed']);
+            this.router.navigate(['/nutri/feed']);
           },
           error: (erro) => {
             console.error('Erro ao cadastrar receita', erro);
-      
+
             const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar receita. Verifique os dados.";
-      
+
             this.notifier.showError(mensagemBackend);
           }
         });

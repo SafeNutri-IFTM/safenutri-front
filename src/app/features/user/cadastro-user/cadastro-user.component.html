@@ -142,12 +142,33 @@
             <div *ngIf="isInvalid('genero')" class="text-red-500 text-xs mt-1 ml-1">Selecione o gênero.</div>
           </div>
 
+          <div class="mt-4">
+            <div class="flex items-start gap-2">
+
+              <input type="checkbox" formControlName="aceitoTermos" id="aceitoTermos"
+                class="w-4 h-4 mt-0.5 shrink-0 text-[#FFC605] border-gray-300 rounded focus:ring-[#FFC605] cursor-pointer">
+
+              <span class="text-sm text-gray-600 leading-snug">
+                Li e aceito os
+                <a (click)="abrirDocumento('TERMO_USO_COMUM', 'Termos de Uso', $event)"
+                  class="text-[#FFC605] hover:underline cursor-pointer font-medium">Termos de Uso</a>
+                e a
+                <a (click)="abrirDocumento('POLITICA_PRIVACIDADE', 'Política de Privacidade', $event)"
+                  class="text-[#FFC605] hover:underline cursor-pointer font-medium">Política de Privacidade</a>
+              </span>
+            </div>
+
+            <div *ngIf="isInvalid('aceitoTermos')" class="text-red-500 text-xs mt-1">
+              Você precisa aceitar os termos para se cadastrar.
+            </div>
+          </div>
+
           <div class="pt-6 flex flex-col items-center relative z-0">
             <div [ngClass]="{'opacity-50 pointer-events-none': userForm.invalid}" class="w-[70%] mx-auto">
               <app-button-primary value="Criar conta"></app-button-primary>
             </div>
 
-            <p class="mt-6 text-[15px] font-normal text-black">Já possui uma conta? <a routerLink="/login"
+            <p class="mt-6 text-[15px] font-normal text-black">Já possui uma conta? <a routerLink="/user/login"
                 class="text-[#FFC605] hover:underline cursor-pointer font-medium">Faça login</a></p>
           </div>
 
@@ -156,6 +177,9 @@
     </div>
   </main>
 
+  <app-documentos-legais-modal [isOpen]="isModalOpen" [titulo]="modalTitulo" [texto]="modalTexto"
+    (fechar)="isModalOpen = false">
+  </app-documentos-legais-modal>
   <app-spinner></app-spinner>
   <app-footer></app-footer>
 </div>

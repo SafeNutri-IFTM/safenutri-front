@@ -15,15 +15,18 @@ export const NutriRoutes: Routes = [
         path: 'cadastro-receita',
         component: CadastroReceitaNutriComponent,
         canActivate: [authGuard],
+        data: { role: 'NUTRI' }
     },
     {
         path: 'cadastro-restricao',
         component: CadastroRestricaoNutriComponent,
         canActivate: [authGuard],
+        data: { role: 'NUTRI' }
     },
     {
         path: 'feed',
         component: FeedNutriComponent,
         canActivate: [authGuard],
+        data: { role: 'NUTRI' }
     }
 ];
