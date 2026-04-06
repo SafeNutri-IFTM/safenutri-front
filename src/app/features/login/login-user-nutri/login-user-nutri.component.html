@@ -24,19 +24,24 @@
 
                 <div>
                     <div
-                        class="relative bg-[#F8F9FA] border-b-2 border-black focus-within:border-[#FFC605] transition-colors rounded-t-lg">
+                        class="relative bg-[#F8F9FA] border-b-2 border-black focus-within:border-[#FFC605] transition-colors rounded-t-lg flex items-center justify-between">
 
-                        <input [type]="showPasswordToggle ? 'text' : 'password'" formControlName="password"
-                            id="password" placeholder=" "
-                            class="peer w-full bg-transparent border-none pt-6 pb-2 pl-3 pr-10 focus:ring-0 text-black text-sm font-normal outline-none">
+                        <div class="grow relative">
+                            <input [type]="showPasswordToggle ? 'text' : 'password'" formControlName="password"
+                                id="password" placeholder=" "
+                                class="peer w-full bg-transparent border-none pt-6 pb-2 px-3 focus:ring-0 text-black text-sm font-normal outline-none">
 
-                        <label for="password"
-                            class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#FFC605] cursor-text">
-                            Senha
-                        </label>
+                            <label for="password" class="absolute text-sm text-gray-500 font-medium duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-left left-3 
+                peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                peer-focus:scale-75 peer-focus:-translate-y-3 
+                peer-focus:text-[#FFC605] cursor-text">
+                                Senha
+                            </label>
+                        </div>
 
                         <button type="button" (click)="togglePassword()"
-                            class="absolute right-3 top-[25px] cursor-pointer text-gray-500 hover:text-black focus:outline-none transition-colors">
+                            class="cursor-pointer text-gray-500 hover:text-black focus:outline-none pr-3 pt-4 transition-colors"
+                            aria-label="Mostrar senha">
 
                             <svg *ngIf="!showPasswordToggle" class="w-5 h-5 pointer-events-none" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
