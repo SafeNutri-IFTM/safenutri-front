@@ -10,6 +10,8 @@ import { SpinnerComponent } from '../../../components/spinner/spinner.component'
 import { UserService } from '../services/user.service';
 import { NotifierService } from '../../../services/notifier.service';
 import { LoadingService } from '../../../services/loading.service';
+import { ButtonPrimaryComponent } from '../../../components/button-primary/button-primary.component';
+import { ButtonSecundaryComponent } from '../../../components/button-secundary/button-secundary.component';
 
 @Component({
     selector: 'app-cadastro-restricao',
@@ -20,7 +22,9 @@ import { LoadingService } from '../../../services/loading.service';
         RouterModule,
         NavbarLoginComponent,
         FooterComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        ButtonPrimaryComponent,
+        ButtonSecundaryComponent
     ],
     templateUrl: './cadastro-restricao.component.html'
 })
