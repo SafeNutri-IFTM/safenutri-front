@@ -12,9 +12,13 @@ export class UserService {
   private urlUser = `${environment.api}/user`;
   private urlGenero = `${environment.api}/genero`;
   private urlRestricao = `${environment.api}/restricao-alimentar`;
-   private urlReceita = `${environment.api}/receita`;
+  private urlReceita = `${environment.api}/receita`;
+  private urlTipoReceita = `${environment.api}/tipo-receita`;
 
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(
+    private http: HttpClient, 
+    private loginService: LoginService
+  ) { }
 
   createUser(userInput: UserInput): Observable<any> {
     return this.http.post<any>(this.urlUser, userInput);
@@ -28,8 +32,18 @@ export class UserService {
     return this.http.get<any[]>(this.urlRestricao);
   }
 
+  getTipoReceita(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + this.loginService.obterToken()
+    });
+    return this.http.get<any[]>(this.urlTipoReceita, {headers: headers});
+  }
+
   createRestricao(payload: any): Observable<any> {
-    return this.http.post<any>(this.urlRestricao, payload);
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + this.loginService.obterToken()
+    });
+    return this.http.post<any>(this.urlRestricao, payload, {headers: headers});
   }
 
   createReceita(payload: any): Observable<any> {

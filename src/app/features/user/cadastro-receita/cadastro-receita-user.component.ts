@@ -13,7 +13,6 @@ import { ButtonPrimaryComponent } from '../../../components/button-primary/butto
 import { ButtonSecundaryComponent } from '../../../components/button-secundary/button-secundary.component';
 import { NotifierService } from '../../../services/notifier.service';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
-import { ReceitaInput } from '../../../interfaces/input/receitaInput';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../services/user.service';
 import { finalize } from 'rxjs';
@@ -45,20 +44,14 @@ import { finalize } from 'rxjs';
     }
   `]
 })
-export class CadastroReceitaComponent implements OnInit {
+export class CadastroReceitaUserComponent implements OnInit {
   
   // === VARIÁVEIS GERAIS ===
   receitaForm!: FormGroup;
 
   // === VARIÁVEIS DO DROPDOWN (TIPO DE RECEITA) ===
   dropdownTipo = false;
-  opcoesTipo = [
-    { label: 'Salgada', value: 'SALGADA' },
-    { label: 'Doce', value: 'DOCE' },
-    { label: 'Agridoce', value: 'AGRIDOCE' },
-    { label: 'Molho', value: 'MOLHO' },
-    { label: 'Bebida', value: 'BEBIDA' }
-  ];
+  opcoesTipo: { label: string, value: string }[] = [];
 
   selectedFile: File | null = null;
   imagePreview!: string | null;
@@ -85,19 +78,27 @@ export class CadastroReceitaComponent implements OnInit {
       ingredientes: this.fb.array([this.criarIngrediente()]),
       passos: this.fb.array([this.criarPasso()])
     });
+
+    this.buscarOpcoes();
   }
+
+    buscarOpcoes(): void {
+      this.userService.getTipoReceita().subscribe({
+        next: (res: any) => {
+          this.opcoesTipo = res.map((r: any) => ({
+              label: r.tipoReceita,
+              value: r.id
+          }));
+        },
+        error: (err) => {
+          console.error('Erro ao carregar tipo de Receita', err);
+        }
+      });
+    }
 
   // ==========================================
   //      MÉTODOS DE CONTROLE DO FORMULÁRIO
   // ==========================================
-
-  salvar(): void {
-    if (this.receitaForm.valid) {
-      console.log('Formulário válido! Pronto para enviar para a API:', this.receitaForm.value);
-    } else {
-      this.receitaForm.markAllAsTouched();
-    }
-  }
 
   voltar(): void {
     this.router.navigate(['/']); 
@@ -292,7 +293,6 @@ export class CadastroReceitaComponent implements OnInit {
 
   async redimensionarImagem(): Promise<File | null> {
     if (!this.selectedFile) {
-      this.notifier.showWarning('Selecione uma imagem antes de enviar.');
       return null;
     }
 
@@ -303,27 +303,40 @@ export class CadastroReceitaComponent implements OnInit {
       initialQuality: 0.8,
     };
 
-    const file = this.selectedFile;
-    const compressedFile = await imageCompression(file, options);
+    try {
+      const file = this.selectedFile;
+      const compressedFile = await imageCompression(file, options);
+      return compressedFile;
 
-    return compressedFile;
+    } catch (error) {
+      this.notifier.showError("Erro ao processar a imagem. Tente outro arquivo.");
+      return null;
+    }
   }
 
-  save(): void {
+  async save(): Promise<void> {
     if (this.receitaForm.valid) {
       const formValues = this.receitaForm.value;
-
       const formData = new FormData();
-      const imagemCompressed = this.redimensionarImagem()
 
-      formData.append("tipoReceitaId", formValues.tipoReceita,)
-      formData.append("titulo", formValues.titulo,)
-      formData.append("descricao", formValues.descricao,)
-      formData.append("tempoPreparo", formValues.tempoPreparo,)
-      formData.append("porcao", formValues.porcao,)
-      formData.append("calorias", formValues.calorias,)
-      formData.append("imagem", imagemCompressed.toString())
-      formData.append("restricoes", formValues.restricoes,)
+      const receitaData = {
+        tipoReceitaId: formValues.tipoReceita,
+        titulo: formValues.titulo,
+        descricao: formValues.descricao,
+        tempoPreparo: formValues.tempoPreparo,
+        porcao : formValues.porcoes, 
+        calorias: formValues.calorias,
+        restricoes: formValues.restricao || [],
+        ingredientes: formValues.ingredientes,
+        passos: formValues.passos
+      };
+
+      formData.append('receita', new Blob([JSON.stringify(receitaData)], { type: 'application/json' }));
+
+      const imagemCompressed = await this.redimensionarImagem()
+      if (imagemCompressed) {
+        formData.append('imagem', imagemCompressed);
+      }
 
       this.loadingService.show();
 
@@ -331,13 +344,13 @@ export class CadastroReceitaComponent implements OnInit {
         .pipe(finalize(() => this.loadingService.hide()))
         .subscribe({
           next: (resposta) => {
-            this.notifier.showSuccess("Usuário cadastrado com sucesso!");
-            this.router.navigate(['/user/login']);
+            this.notifier.showSuccess("Receita cadastrada com sucesso!");
+            this.router.navigate(['/user/feed']);
           },
           error: (erro) => {
-            console.error('Erro ao cadastrar usuário', erro);
+            console.error('Erro ao cadastrar receita', erro);
       
-            const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar usuário. Verifique os dados.";
+            const mensagemBackend = erro?.error?.message || erro?.error || "Erro ao cadastrar receita. Verifique os dados.";
       
             this.notifier.showError(mensagemBackend);
           }
