@@ -14,8 +14,7 @@
 
     <div class="relative">
       <button (click)="toggleMenu()"
-        class="bg-white text-black px-2 py-2 rounded-full flex items-center gap-3 text-sm shadow hover:bg-gray-50 transition-colors"
-      >
+        class="bg-white text-black px-2 py-2 rounded-full flex items-center gap-3 text-sm shadow hover:bg-gray-50 transition-colors">
         <div class="w-7 h-7 rounded-full flex items-center justify-center text-gray-500">
           <img src="./assets/Avatar.png" alt="Avatar do Usuário">
         </div>
@@ -24,12 +23,12 @@
       </button>
 
       <div *ngIf="isMenuOpen"
-        class="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 text-black text-sm flex flex-col"
-      >
+        class="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 text-black text-sm flex flex-col">
         <a href="#" class="px-4 py-2.5 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700">
           <img src="./assets/avatar-menu.png" alt="Avatar do Usuário"> Meu perfil
         </a>
-        <a href="#" class="px-4 py-2.5 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700">
+        <a (click)="sair()"
+          class="cursor-pointer px-4 py-2.5 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700">
           <img src="./assets/logout.png" alt="Sair"> Sair
         </a>
       </div>

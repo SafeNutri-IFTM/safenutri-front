@@ -14,15 +14,18 @@ export const UserRoutes: Routes = [
         path: 'cadastro-receita',
         component: CadastroReceitaUserComponent,
         canActivate: [authGuard],
+        data: { role: 'USER' }
     },
     {
         path: 'cadastro-restricao',
         component: CadastroRestricaoUserComponent,
         canActivate: [authGuard],
+        data: { role: 'USER' }
     },
     {
         path: 'feed',
         component: FeedUserComponent,
         canActivate: [authGuard],
+        data: { role: 'USER' }
     }
 ];

@@ -17,17 +17,22 @@ export const authGuard: CanActivateFn = (route, state) => {
   const expectedRole = route.data?.['role'];
 
   if (expectedRole) {
-    // Pega as informações de dentro do JWT
     const claims = loginService.obterClaimsJwt();
 
-    // ATENÇÃO: Dependendo de como o seu Spring Boot gera o token,
-    // a propriedade da role pode se chamar 'role', 'roles', ou 'authorities'.
-    // Altere 'claims?.role' abaixo para bater com o nome exato da sua interface Claims.
     if (claims && claims.role !== expectedRole) {
       console.warn(`Acesso negado! O usuário não tem a role: ${expectedRole}`);
 
-      // Se ele não tem permissão, manda ele de volta pra home (ou outra página de erro)
-      return router.createUrlTree(['/']);
+      // Redireciona para o feed correto baseado na role real do usuário
+      if (claims.role === 'USER') {
+        return router.createUrlTree(['/user/feed']);
+      }
+      else if (claims.role === 'NUTRI') { // Lembre-se de checar se o nome exato é NUTRI, ROLE_NUTRI, etc.
+        return router.createUrlTree(['/nutri/feed']);
+      }
+      else {
+        // Fallback caso a role seja desconhecida
+        return router.createUrlTree(['/']);
+      }
     }
   }
 
