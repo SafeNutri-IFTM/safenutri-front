@@ -368,7 +368,7 @@ export class CadastroReceitaNutriComponent implements OnInit {
         .subscribe({
           next: (resposta) => {
             this.notifier.showSuccess("Receita cadastrada com sucesso!");
-            this.router.navigate(['/user/feed']);
+            this.router.navigate(['/nutri/feed']);
           },
           error: (erro) => {
             console.error('Erro ao cadastrar receita', erro);
