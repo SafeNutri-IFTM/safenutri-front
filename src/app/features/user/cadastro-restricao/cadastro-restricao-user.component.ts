@@ -26,9 +26,9 @@ import { ButtonSecundaryComponent } from '../../../components/button-secundary/b
         ButtonPrimaryComponent,
         ButtonSecundaryComponent
     ],
-    templateUrl: './cadastro-restricao.component.html'
+    templateUrl: './cadastro-restricao-user.component.html'
 })
-export class CadastroRestricaoComponent implements OnInit {
+export class CadastroRestricaoUserComponent implements OnInit {
     restricaoForm: FormGroup;
 
     constructor(

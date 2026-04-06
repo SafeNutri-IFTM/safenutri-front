@@ -8,7 +8,7 @@ import { FooterComponent } from '../../../components/footer/footer.component';
 import { NavbarLoginComponent } from '../../../components/navbar-login/navbar-login.component';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 import { UserService } from '../services/user.service';
-import { UserInput } from '../../../interfaces/input/UserInput';
+import { UserInput } from '../../../interfaces/input/userInput';
 import { NotifierService } from '../../../services/notifier.service';
 import { LoadingService } from '../../../services/loading.service';
 import { roles } from '../../../const/roles';
@@ -130,7 +130,7 @@ export class CadastroUserComponent implements OnInit {
 
             this.loadingService.show();
 
-            this.userService.create(payload)
+            this.userService.createUser(payload)
                 .pipe(finalize(() => this.loadingService.hide()))
                 .subscribe({
                     next: (resposta) => {

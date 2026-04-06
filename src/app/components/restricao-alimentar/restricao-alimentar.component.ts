@@ -37,7 +37,7 @@ export class RestricaoAlimentarComponent implements OnInit {
     }
 
     buscarOpcoes(): void {
-        this.userService.getRestricao().subscribe({
+        this.userService.getRestricoes().subscribe({
             next: (restricoes: any) => {
                 this.opcoes = restricoes.map((r: any) => ({
                     label: r.restricao,
